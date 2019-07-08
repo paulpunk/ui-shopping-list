@@ -27,9 +27,7 @@ export default class RootComponent extends React.Component {
   render = () => {
     if (!this.state.isReady) {
       return (
-        <View
-          style={{ flex: 1, justifyContent: "center", alignItems: "center" }}
-        >
+        <View>
           {this.renderStatusBar()}
           <Spinner color={COLORS.primary} />
         </View>
