@@ -27,53 +27,53 @@ const styles = StyleSheet.create({
   }
 });
 
-export default class TodosContainer extends React.Component {
-  state = {
-    newtodo: false
-  };
+export default class TodosScreen extends React.Component {
+  constructor(props) {
+    super(props);
 
-  onAllData = (todos, streamData) => {
-    return (
-      <FlatList
-        style={{ width: "100%", top: 15 }}
-        data={filteredData}
-        keyExtractor={item => item._id}
-        renderItem={({ item: todo }) => <TodoItem todo={todo} />}
-      />
-    );
-  };
+    this.state = {
+      newtodo: false,
+      todos: [
+        {
+          _id: "1",
+          name: "apfel",
+          completed: false,
+          createdAt: 12
+        }
+      ]
+    };
+  }
 
   render() {
     const isAndroid = Platform.OS === "android";
-
-    let todo = {
-      _id: "1",
-      title: "apfel",
-      completed: false,
-      createdAt: 12
-    };
-
-    this.state.todos = [todo];
-
-    let emptytodo = {
-      _id: undefined,
-      title: "",
-      completed: undefined,
-      createdAt: undefined
-    };
-
     return (
       <View style={{ flex: 1 }}>
         <ScrollView>
           <FlatList
             data={this.state.todos}
-            keyExtractor={item => item._id}
-            renderItem={({ item: todo }) => <ShoppingListItem todo={todo} />}
+            keyExtractor={item => item.name}
+            renderItem={({ item: item }) => <ShoppingListItem item={item} />}
           />
-          {this.state.newtodo ? <ShoppingListItem todo={emptytodo} /> : null}
+          {this.state.newtodo ? (
+            <ShoppingListItem onCreate={name => this.create(name)} />
+          ) : null}
         </ScrollView>
-        <AddTodoButton onPress={() => this.setState({ newtodo: true })} />
+        <AddTodoButton onPress={() => this.addItem()} />
       </View>
     );
+  }
+
+  addItem() {
+    this.setState({ newtodo: true });
+  }
+
+  create(name) {
+    newitem = {
+      _id: undefined,
+      name: name,
+      completed: undefined,
+      createdAt: undefined
+    };
+    this.setState({ todos: this.state.todos.concat(newitem), newtodo: false });
   }
 }

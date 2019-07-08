@@ -1,18 +1,12 @@
 import React, { Component } from "react";
-import { Text, View, StyleSheet } from "react-native";
+import { Text, View, StyleSheet, Platform } from "react-native";
 import { Constants } from "expo";
-import { CheckBox,Input } from "react-native-elements";
-import ListItem from "./ListItem";
+import { CheckBox, Input, ListItem } from "react-native-elements";
 
 export default class ShoppingListItem extends Component {
   constructor(props) {
     super(props);
-    const { title, completed, createdAt } = this.props.todo;
-    this.state = {
-      title,
-      completed,
-      createdAt
-    };
+    this.state.name = typeof props.item !== "undefined" ? props.item.name : "";
   }
 
   state = {
@@ -27,21 +21,47 @@ export default class ShoppingListItem extends Component {
   render() {
     return (
       <View>
-        <ListItem
-          leftElement={
-            <CheckBox onPress={this.press} checked={this.state.checked} />
-          }
-          title={"test"}
-          // input={{ placeholder: "test", inputStyle: { textAlign: "left" } }}
-          bottomDivider={true}
-        />
-        <ListItem
-          leftElement={
-            <CheckBox onPress={this.press} checked={this.state.checked} />
-          }
-          input={{ placeholder: "test", inputStyle: { textAlign: "left" } }}
-          bottomDivider={true}
-        />
+        {typeof this.props.item === "undefined" ? (
+          <ListItem
+            leftElement={
+              <CheckBox onPress={this.press} checked={this.state.checked} />
+            }
+            title={
+              <Input
+                value={this.state.name}
+                onChangeText={text => this.setState({ name: text })}
+                onSubmitEditing={() => this.props.onCreate(this.state.name)}
+                autoFocus
+                placeholder={"test"}
+                containerStyle={{
+                  paddingHorizontal: null,
+                }}
+                inputContainerStyle={{
+                  borderBottomWidth: 0
+                }}
+                inputStyle={{
+                  ...Platform.select({
+                    ios: {
+                      fontSize: 17
+                    },
+                    default: {
+                      fontSize: 16
+                    }
+                  })
+                }}
+              />
+            }
+            bottomDivider={true}
+          />
+        ) : (
+          <ListItem
+            leftElement={
+              <CheckBox onPress={this.press} checked={this.state.checked} />
+            }
+            title={this.state.name}
+            bottomDivider={true}
+          />
+        )}
       </View>
     );
   }
