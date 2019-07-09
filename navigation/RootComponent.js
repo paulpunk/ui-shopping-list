@@ -2,6 +2,7 @@ import * as Font from "expo-font";
 import React from "react";
 import { StatusBar, View } from "react-native";
 import { Container, Spinner } from "native-base";
+import { Header, Icon } from "react-native-elements";
 
 import COLORS from "../constants/Colors";
 import TodosScreen from "../screens/TodosScreen";
@@ -35,6 +36,12 @@ export default class RootComponent extends React.Component {
     return (
       <View style={{ flex: 1 }}>
         {this.renderStatusBar()}
+        <Header
+          centerComponent={{
+            icon: "local-grocery-store" ,
+            color: "#fff"
+          }}
+        />
         <TodosScreen />
       </View>
     );

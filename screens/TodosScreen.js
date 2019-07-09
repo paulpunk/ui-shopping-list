@@ -7,7 +7,6 @@ import {
   Platform,
   View
 } from "react-native";
-import { Header, Icon } from "react-native-elements";
 
 import COLORS from "../constants/Colors";
 import AddTodo from "../components/AddTodo";
@@ -48,12 +47,6 @@ export default class TodosScreen extends React.Component {
     const isAndroid = Platform.OS === "android";
     return (
       <View style={{ flex: 1 }}>
-        <Header
-          centerComponent={{
-            icon: "local-grocery-store" ,
-            color: "#fff"
-          }}
-        />
         <ScrollView>
           <FlatList
             data={this.state.todos}
