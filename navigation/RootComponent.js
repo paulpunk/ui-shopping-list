@@ -20,9 +20,7 @@ export default class RootComponent extends React.Component {
     this.setState({ isReady: true });
   };
 
-  renderStatusBar = () => (
-    <StatusBar backgroundColor={COLORS.secondary} barStyle="dark-content" />
-  );
+  renderStatusBar = () => <StatusBar barStyle="light-content" />;
 
   render = () => {
     if (!this.state.isReady) {
@@ -34,6 +32,11 @@ export default class RootComponent extends React.Component {
       );
     }
 
-    return <TodosScreen />;
+    return (
+      <View style={{ flex: 1 }}>
+        {this.renderStatusBar()}
+        <TodosScreen />
+      </View>
+    );
   };
 }

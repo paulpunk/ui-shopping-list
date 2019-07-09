@@ -4,12 +4,12 @@ import {
   StyleSheet,
   FlatList,
   StatusBar,
-  Platform
+  Platform,
+  View
 } from "react-native";
-import { View } from "native-base";
+import { Header, Icon } from "react-native-elements";
 
 import COLORS from "../constants/Colors";
-import Header from "../components/Header";
 import AddTodo from "../components/AddTodo";
 import AddTodoButton from "../components/AddTodoButton";
 import TodoItem from "../components/TodoItem";
@@ -48,6 +48,12 @@ export default class TodosScreen extends React.Component {
     const isAndroid = Platform.OS === "android";
     return (
       <View style={{ flex: 1 }}>
+        <Header
+          centerComponent={{
+            icon: "local-grocery-store" ,
+            color: "#fff"
+          }}
+        />
         <ScrollView>
           <FlatList
             data={this.state.todos}
@@ -55,7 +61,10 @@ export default class TodosScreen extends React.Component {
             renderItem={({ item: item }) => <ShoppingListItem item={item} />}
           />
           {this.state.newtodo ? (
-            <ShoppingListItem onCreate={name => this.create(name)} />
+            <ShoppingListItem
+              onCreate={name => this.create(name)}
+              onEndEditing={() => this.endEditing()}
+            />
           ) : null}
         </ScrollView>
         <AddTodoButton onPress={() => this.addItem()} />
@@ -75,5 +84,9 @@ export default class TodosScreen extends React.Component {
       createdAt: undefined
     };
     this.setState({ todos: this.state.todos.concat(newitem), newtodo: false });
+  }
+
+  endEditing() {
+    this.setState({ newtodo: false });
   }
 }
