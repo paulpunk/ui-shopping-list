@@ -11,44 +11,42 @@ export default class ShoppingListItem extends Component {
   constructor(props) {
     super(props);
 
-    this.state.name = props.item.name;
-    this.state.checked = props.item.checked;
+    this.state = { item: props.item };
   }
 
-  state = {
-    checked: false
-  };
-  press = () => {
-    this.setState(state => ({
-      checked: !state.checked
-    }));
-  };
-
   componentDidMount() {
-    if (!this.state.checked) {
+    if (!this.props.item.checked) {
       this.animation.play(16, 16);
     } else {
       this.animation.play(40, 40);
     }
   }
 
-  componentDidUpdate(prevProps, prevState) {
-    if (this.state.checked && !prevState.checked) {
+  componentDidUpdate(prevProps) {
+    if (this.props.item.checked && !prevProps.item.checked) {
       this.animation.play(0, 40);
-    } else if (!this.state.checked && prevState.checked) {
+    } else if (!this.props.item.checked && prevProps.item.checked) {
       this.animation.play(40, 16);
     }
   }
 
   render() {
-    onChangeText = name => this.setState({ name: text });
-    onSubmitEditing = () => this.props.onCreate(this.state.name);
-    onEndEditing = () => this.props.onEndEditing(this.props.item);
+    onPress = () => this.props.onPress(this.props.item);
+    onEndEditing = () => {
+      this.setState({ item: this.props.item });
+      this.props.onEndEditing(this.props.item);
+    };
+    onChangeText = name => {
+      var newitem = { ...this.state.item };
+      newitem.name = name;
+      this.setState({ item: newitem });
+    };
+    onSubmitEditing = () => this.props.onSubmit(this.state.item);
 
     return (
       <View>
         <ListItem
-          onPress={this.press}
+          onPress={onPress}
           leftElement={this.checkBox()}
           title={this.input({
             onChangeText: onChangeText,
@@ -79,8 +77,8 @@ export default class ShoppingListItem extends Component {
     return (
       <Input
         {...input}
-        autoFocus={this.state.name === ""}
-        value={this.state.name}
+        autoFocus={this.state.item.name === ""}
+        value={this.state.item.name}
         placeholder={"test"}
         containerStyle={{
           paddingHorizontal: null

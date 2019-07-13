@@ -60,8 +60,9 @@ export default class TodosScreen extends React.Component {
             renderItem={({ item: item }) => (
               <ShoppingListItem
                 item={item}
-                onCreate={name => this.create(name)}
+                onSubmit={item => this.onSubmit(item)}
                 onEndEditing={item => this.endEditing(item)}
+                onPress={item => this.onPress(item)}
               />
             )}
           />
@@ -81,14 +82,24 @@ export default class TodosScreen extends React.Component {
     this.setState({ todos: this.state.todos.concat(newitem) });
   }
 
-  create(name) {
-    this.setState({ newitem: undefined });
+  onSubmit(item) {}
+
+  onPress(newitem) {
+    this.setState(prevState => ({
+      todos: prevState.todos.map(item => {
+        if (item == newitem) {
+          return { ...item, checked: !item.checked };
+        } else {
+          return item;
+        }
+      })
+    }));
   }
 
   endEditing(item) {
     if (item.name === "") {
       this.setState(prevState => ({
-        todos: prevState.todos.filter(el => el != item),
+        todos: prevState.todos.filter(el => el != item)
       }));
     }
   }
