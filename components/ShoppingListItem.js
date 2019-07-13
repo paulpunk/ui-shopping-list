@@ -1,7 +1,9 @@
 import React, { Component } from "react";
 import { Text, View, StyleSheet, Platform } from "react-native";
 import { Constants } from "expo";
-import { CheckBox, Input, ListItem } from "react-native-elements";
+import { Input, ListItem } from "react-native-elements";
+import LottieView from "lottie-react-native";
+import { Animated } from "react-native";
 
 const HEIGTH = 20;
 
@@ -9,7 +11,8 @@ export default class ShoppingListItem extends Component {
   constructor(props) {
     super(props);
 
-    this.state.name = typeof props.item !== "undefined" ? props.item.name : "";
+    this.state.name = props.item.name;
+    this.state.checked = props.item.checked;
   }
 
   state = {
@@ -21,51 +24,53 @@ export default class ShoppingListItem extends Component {
     }));
   };
 
+  componentDidMount() {
+    if (!this.state.checked) {
+      this.animation.play(16, 16);
+    } else {
+      this.animation.play(40, 40);
+    }
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    if (this.state.checked && !prevState.checked) {
+      this.animation.play(0, 40);
+    } else if (!this.state.checked && prevState.checked) {
+      this.animation.play(40, 16);
+    }
+  }
+
   render() {
+    onChangeText = name => this.setState({ name: text });
+    onSubmitEditing = () => this.props.onCreate(this.state.name);
+    onEndEditing = () => this.props.onEndEditing(this.props.item);
+
     return (
       <View>
-        {typeof this.props.item === "undefined"
-          ? this.newItem()
-          : this.existingItem()}
+        <ListItem
+          onPress={this.press}
+          leftElement={this.checkBox()}
+          title={this.input({
+            onChangeText: onChangeText,
+            onSubmitEditing: onSubmitEditing,
+            onEndEditing: onEndEditing
+          })}
+          bottomDivider={true}
+        />
       </View>
     );
   }
 
-  newItem() {
-    onChangeText = text => this.setState({ name: text });
-    onSubmitEditing = () => this.props.onCreate(this.state.name);
-    onEndEditing = () => this.props.onEndEditing();
-
+  checkBox() {
     return (
-      <ListItem
-        leftElement={
-          <CheckBox  containerStyle={{ margin: 0, padding: 0 }} disabled />
-        }
-        title={this.input({
-          onChangeText: onChangeText,
-          onSubmitEditing: onSubmitEditing,
-          onEndEditing: onEndEditing,
-          autoFocus: true
-        })}
-        bottomDivider={true}
-      />
-    );
-  }
-
-  existingItem() {
-    return (
-      <ListItem
-        onPress={this.press}
-        chevron={false}
-        leftElement={
-          <CheckBox
-            disabled
-            containerStyle={{ margin: 0, padding: 0 }}
-            checked={this.state.checked}
-          />
-        }
-        title={this.input()}
-        bottomDivider={true}
+      <LottieView
+        style={{ width: 30 }}
+        source={require("./animation.json")}
+        // autoPlay
+        loop={false}
+        ref={animation => {
+          this.animation = animation;
+        }}
       />
     );
   }
@@ -74,6 +79,7 @@ export default class ShoppingListItem extends Component {
     return (
       <Input
         {...input}
+        autoFocus={this.state.name === ""}
         value={this.state.name}
         placeholder={"test"}
         containerStyle={{

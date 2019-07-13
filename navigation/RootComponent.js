@@ -21,7 +21,7 @@ export default class RootComponent extends React.Component {
     this.setState({ isReady: true });
   };
 
-  renderStatusBar = () => <StatusBar barStyle="light-content" />;
+  renderStatusBar = () => <StatusBar barStyle="dark-content" />;
 
   render = () => {
     if (!this.state.isReady) {
@@ -38,8 +38,12 @@ export default class RootComponent extends React.Component {
         {this.renderStatusBar()}
         <Header
           centerComponent={{
-            icon: "local-grocery-store" ,
-            color: "#fff"
+            icon: "credit-card" ,
+            color: "#000"
+          }}
+          containerStyle={{
+            backgroundColor: '#fff',
+            justifyContent: 'space-around',
           }}
         />
         <TodosScreen />

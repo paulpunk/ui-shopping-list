@@ -4,7 +4,7 @@ export default PropTypes.shape({
   data: PropTypes.arrayOf(
     PropTypes.shape({
       name: PropTypes.string,
-      completed: PropTypes.bool,
+      checked: PropTypes.bool,
       createdAt: PropTypes.number
     })
   )

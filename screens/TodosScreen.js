@@ -31,13 +31,18 @@ export default class TodosScreen extends React.Component {
     super(props);
 
     this.state = {
-      newtodo: false,
       todos: [
         {
           _id: "1",
           name: "apfel",
-          completed: false,
-          createdAt: 12
+          createdAt: 12,
+          checked: true
+        },
+        {
+          _id: "2",
+          name: "birne",
+          createdAt: 12,
+          checked: false
         }
       ]
     };
@@ -45,20 +50,21 @@ export default class TodosScreen extends React.Component {
 
   render() {
     const isAndroid = Platform.OS === "android";
+
     return (
       <View style={{ flex: 1 }}>
         <ScrollView>
           <FlatList
             data={this.state.todos}
             keyExtractor={item => item.name}
-            renderItem={({ item: item }) => <ShoppingListItem item={item} />}
+            renderItem={({ item: item }) => (
+              <ShoppingListItem
+                item={item}
+                onCreate={name => this.create(name)}
+                onEndEditing={item => this.endEditing(item)}
+              />
+            )}
           />
-          {this.state.newtodo ? (
-            <ShoppingListItem
-              onCreate={name => this.create(name)}
-              onEndEditing={() => this.endEditing()}
-            />
-          ) : null}
         </ScrollView>
         <AddTodoButton onPress={() => this.addItem()} />
       </View>
@@ -66,20 +72,24 @@ export default class TodosScreen extends React.Component {
   }
 
   addItem() {
-    this.setState({ newtodo: true });
-  }
-
-  create(name) {
     newitem = {
       _id: undefined,
-      name: name,
+      name: "",
       completed: undefined,
       createdAt: undefined
     };
-    this.setState({ todos: this.state.todos.concat(newitem), newtodo: false });
+    this.setState({ todos: this.state.todos.concat(newitem) });
   }
 
-  endEditing() {
-    this.setState({ newtodo: false });
+  create(name) {
+    this.setState({ newitem: undefined });
+  }
+
+  endEditing(item) {
+    if (item.name === "") {
+      this.setState(prevState => ({
+        todos: prevState.todos.filter(el => el != item),
+      }));
+    }
   }
 }
