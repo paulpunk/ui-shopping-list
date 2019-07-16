@@ -37,13 +37,15 @@ export default class RootComponent extends React.Component {
       <View style={{ flex: 1 }}>
         {this.renderStatusBar()}
         <Header
+          leftComponent={{ icon: "share", color: "#000" }}
           centerComponent={{
-            icon: "credit-card" ,
-            color: "#000"
+            text: "nicelist",
+            style: { fontSize: 20, fontWeight: "bold", color: "#000" }
           }}
+          rightComponent={<Icon type="ionicon" name="ios-options" color="#000" />}
           containerStyle={{
-            backgroundColor: '#fff',
-            justifyContent: 'space-around',
+            backgroundColor: "#fff",
+            justifyContent: "space-around"
           }}
         />
         <TodosScreen />

@@ -16,38 +16,41 @@ export default class ShoppingListItem extends Component {
 
   componentDidMount() {
     if (!this.props.item.checked) {
-      this.animation.play(16, 16);
+      this.animation.play(24, 24);
     } else {
-      this.animation.play(40, 40);
+      this.animation.play(48, 48);
     }
   }
 
   componentDidUpdate(prevProps) {
     if (this.props.item.checked && !prevProps.item.checked) {
-      this.animation.play(0, 40);
+      this.animation.reset();
+      this.animation.play(0, 48);
     } else if (!this.props.item.checked && prevProps.item.checked) {
-      this.animation.play(40, 16);
+      this.animation.play(48, 24);
     }
   }
 
   render() {
     onPress = () => this.props.onPress(this.props.item);
-    onEndEditing = () => {
-      this.setState({ item: this.props.item });
-      this.props.onEndEditing(this.props.item);
-    };
+    onEndEditing = () =>
+      this.props.onEndEditing(this.props.item, this.state.item);
+    onSubmitEditing = () =>
+      this.props.onSubmit(this.props.item, this.state.item);
     onChangeText = name => {
       var newitem = { ...this.state.item };
       newitem.name = name;
       this.setState({ item: newitem });
     };
-    onSubmitEditing = () => this.props.onSubmit(this.state.item);
 
     return (
       <View>
         <ListItem
           onPress={onPress}
           leftElement={this.checkBox()}
+          containerStyle={{
+            backgroundColor: "#fff"
+          }}
           title={this.input({
             onChangeText: onChangeText,
             onSubmitEditing: onSubmitEditing,

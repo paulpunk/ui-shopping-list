@@ -33,13 +33,13 @@ export default class TodosScreen extends React.Component {
     this.state = {
       todos: [
         {
-          _id: "1",
+          _id: 1,
           name: "apfel",
           createdAt: 12,
           checked: true
         },
         {
-          _id: "2",
+          _id: 2,
           name: "birne",
           createdAt: 12,
           checked: false
@@ -56,12 +56,12 @@ export default class TodosScreen extends React.Component {
         <ScrollView>
           <FlatList
             data={this.state.todos}
-            keyExtractor={item => item.name}
+            keyExtractor={item => item._id.toString()}
             renderItem={({ item: item }) => (
               <ShoppingListItem
                 item={item}
-                onSubmit={item => this.onSubmit(item)}
-                onEndEditing={item => this.endEditing(item)}
+                onSubmit={(previtem, item) => this.onSubmit(previtem, item)}
+                onEndEditing={(previtem, item) => this.onSubmit(previtem, item)}
                 onPress={item => this.onPress(item)}
               />
             )}
@@ -73,16 +73,15 @@ export default class TodosScreen extends React.Component {
   }
 
   addItem() {
-    newitem = {
-      _id: undefined,
-      name: "",
-      completed: undefined,
-      createdAt: undefined
-    };
-    this.setState({ todos: this.state.todos.concat(newitem) });
+    this.setState({
+      todos: this.state.todos.concat({
+        _id: Math.max(...this.state.todos.map(o => o._id), 0) + 1,
+        name: "",
+        completed: undefined,
+        createdAt: undefined
+      })
+    });
   }
-
-  onSubmit(item) {}
 
   onPress(newitem) {
     this.setState(prevState => ({
@@ -96,11 +95,29 @@ export default class TodosScreen extends React.Component {
     }));
   }
 
-  endEditing(item) {
+  onSubmit(previtem, item) {
     if (item.name === "") {
-      this.setState(prevState => ({
-        todos: prevState.todos.filter(el => el != item)
-      }));
+      this.remove(previtem);
+    } else if (previtem.name !== item.name) {
+      this.update(previtem, item);
     }
+  }
+
+  remove(item) {
+    this.setState(prevState => ({
+      todos: prevState.todos.filter(el => el != item)
+    }));
+  }
+
+  update(previtem, item) {
+    this.setState(prevState => ({
+      todos: this.state.todos.map(i => {
+        if (i == previtem) {
+          return { ...i, name: item.name };
+        } else {
+          return i;
+        }
+      })
+    }));
   }
 }
