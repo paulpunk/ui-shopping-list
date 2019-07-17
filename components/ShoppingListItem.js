@@ -27,6 +27,7 @@ export default class ShoppingListItem extends Component {
       this.animation.reset();
       this.animation.play(0, 48);
     } else if (!this.props.item.checked && prevProps.item.checked) {
+      this.animation.reset();
       this.animation.play(48, 24);
     }
   }
