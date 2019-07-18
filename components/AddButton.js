@@ -1,10 +1,10 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import { Icon, Fab } from 'native-base';
-import COLORS from '../constants/Colors';
+import React from "react";
+import PropTypes from "prop-types";
+import { Icon, Fab } from "native-base";
+import COLORS from "../constants/Colors";
 
 const propTypes = {
-  onPress: PropTypes.func.isRequired,
+  onPress: PropTypes.func.isRequired
 };
 
 const AddTodoButton = ({ onPress }) => (
@@ -15,7 +15,7 @@ const AddTodoButton = ({ onPress }) => (
     position="bottomRight"
     onPress={onPress}
   >
-    <Icon name="add" />
+    <Icon name="add" style={{ color: COLORS.secondary }} />
   </Fab>
 );
 

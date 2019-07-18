@@ -6,6 +6,13 @@ import { Header, Icon } from "react-native-elements";
 
 import COLORS from "../constants/Colors";
 import TodosScreen from "../screens/TodosScreen";
+import {
+  createAppContainer,
+  createDrawerNavigator,
+  createStackNavigator,
+  SafeAreaView
+} from "react-navigation";
+import { NavigationScreenProp, NavigationState } from "react-navigation";
 
 export default class RootComponent extends React.Component {
   state = {
@@ -37,12 +44,19 @@ export default class RootComponent extends React.Component {
       <View style={{ flex: 1 }}>
         {this.renderStatusBar()}
         <Header
-          leftComponent={{ icon: "share", color: "#000" }}
+          leftComponent={
+            <Icon
+              type="ionicon"
+              name="ios-options"
+              color="#000"
+              onPress={() => this.props.navigation.openDrawer()}
+            />
+          }
           centerComponent={{
             text: "nicelist",
             style: { fontSize: 20, fontWeight: "bold", color: "#000" }
           }}
-          rightComponent={<Icon type="ionicon" name="ios-options" color="#000" />}
+          rightComponent={{ icon: "share", color: "#000" }}
           containerStyle={{
             backgroundColor: "#fff",
             justifyContent: "space-around"

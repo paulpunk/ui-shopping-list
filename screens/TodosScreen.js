@@ -9,10 +9,11 @@ import {
 } from "react-native";
 
 import COLORS from "../constants/Colors";
-import AddTodo from "../components/AddTodo";
-import AddTodoButton from "../components/AddTodoButton";
-import TodoItem from "../components/TodoItem";
-import ShoppingListItem from "../components/ShoppingListItem";
+import AddButton from "../components/AddButton";
+import Item from "../components/Item";
+import Title from "../components/Title";
+import MenuButton from "../components/MenuButton";
+import ShareButton from "../components/ShareButton";
 
 const styles = StyleSheet.create({
   row: {
@@ -27,6 +28,12 @@ const styles = StyleSheet.create({
 });
 
 export default class TodosScreen extends React.Component {
+  static navigationOptions = {
+    headerTitle: <Title />,
+    headerLeft: <MenuButton />,
+    headerRight: <ShareButton />
+  };
+
   constructor(props) {
     super(props);
 
@@ -58,7 +65,7 @@ export default class TodosScreen extends React.Component {
             data={this.state.todos}
             keyExtractor={item => item._id.toString()}
             renderItem={({ item: item }) => (
-              <ShoppingListItem
+              <Item
                 item={item}
                 onSubmit={(previtem, item) => this.onSubmit(previtem, item)}
                 onEndEditing={(previtem, item) => this.onSubmit(previtem, item)}
@@ -67,19 +74,21 @@ export default class TodosScreen extends React.Component {
             )}
           />
         </ScrollView>
-        <AddTodoButton onPress={() => this.addItem()} />
+        <AddButton onPress={() => this.addItem()} />
       </View>
     );
   }
 
   addItem() {
     this.setState({
-      todos: this.state.todos.concat({
-        _id: Math.max(...this.state.todos.map(o => o._id), 0) + 1,
-        name: "",
-        completed: undefined,
-        createdAt: undefined
-      })
+      todos: [
+        {
+          _id: Math.max(...this.state.todos.map(o => o._id), 0) + 1,
+          name: "",
+          completed: undefined,
+          createdAt: undefined
+        }
+      ].concat(this.state.todos)
     });
   }
 

@@ -67,7 +67,7 @@ export default class ShoppingListItem extends Component {
     return (
       <LottieView
         style={{ width: 30 }}
-        source={require("./animation.json")}
+        source={require("../animation/animation.json")}
         // autoPlay
         loop={false}
         ref={animation => {

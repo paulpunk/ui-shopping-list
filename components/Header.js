@@ -1,26 +1,56 @@
-import React from 'react';
-import { Header, Body, Title } from 'native-base';
+import * as Font from "expo-font";
+import React from "react";
+import { StatusBar, View, Text } from "react-native";
+import { Header, Icon } from "react-native-elements";
+import { withNavigation } from "react-navigation";
+import { getStatusBarHeight } from "react-native-status-bar-height";
 
-import COLORS from '../constants/Colors';
-
-const AppHeader = () => (
-  <Header style={{ backgroundColor: COLORS.primary }}>
-    <Body
-      style={{
-        flex: 1,
-        flexDirection: 'row',
-      }}
-    >
-      <Title
+class Listheader extends React.Component {
+  render = () => {
+    return (
+      <View
         style={{
-          color: 'white',
-          paddingLeft: 7,
+          flex: 1,
+          shadowOpacity: 1,
+          backgroundColor: "#fff",
+          alignItems: "center"
         }}
       >
-        Reactive Todos
-      </Title>
-    </Body>
-  </Header>
-);
+        <View
+          style={{
+            height:getStatusBarHeight()
+          }}
+        >
+          <StatusBar barStyle="dark-content"  />
+        </View>
+        <View
+          style={{
+            width: "100%",
+            flexDirection: "row",
+            flex: 1,
+            justifyContent: "space-between"
+          }}
+        >
+          <Icon
+            type="ionicon"
+            name="ios-options"
+            color="#000"
+            onPress={() => this.props.navigation.openDrawer()}
+          />
 
-export default AppHeader;
+          <Text style={{ fontSize: 20, fontWeight: "bold", color: "#000" }}>
+            nicelist
+          </Text>
+          <Icon
+            name="share"
+            color="#000"
+            onPress={() => this.props.navigation.openDrawer()}
+          />
+        </View>
+        <Text>{this.props.text}</Text>
+      </View>
+    );
+  };
+}
+
+export default withNavigation(Listheader);
