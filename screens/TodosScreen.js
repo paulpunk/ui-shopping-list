@@ -14,18 +14,7 @@ import Item from "../components/Item";
 import Title from "../components/Title";
 import MenuButton from "../components/MenuButton";
 import ShareButton from "../components/ShareButton";
-
-const styles = StyleSheet.create({
-  row: {
-    top: 15,
-    flex: 1,
-    width: "100%",
-    flexDirection: "row",
-    alignItems: "center",
-    paddingVertical: 0,
-    paddingHorizontal: 0
-  }
-});
+import Service from "../service/Service";
 
 export default class TodosScreen extends React.Component {
   static navigationOptions = {
@@ -37,33 +26,21 @@ export default class TodosScreen extends React.Component {
   constructor(props) {
     super(props);
 
+    service = new Service();
+
     this.state = {
-      todos: [
-        {
-          _id: 1,
-          name: "apfel",
-          createdAt: 12,
-          checked: true
-        },
-        {
-          _id: 2,
-          name: "birne",
-          createdAt: 12,
-          checked: false
-        }
-      ]
+      todos: [],
+      user: "paulpunke@gmail.com"
     };
   }
 
   render() {
-    const isAndroid = Platform.OS === "android";
-
     return (
       <View style={{ flex: 1 }}>
         <ScrollView>
           <FlatList
-            data={this.state.todos}
-            keyExtractor={item => item._id.toString()}
+            data={this.state.todos.filter(el => el.State !== "delete")}
+            keyExtractor={item => item.ID.toString()}
             renderItem={({ item: item }) => (
               <Item
                 item={item}
@@ -83,50 +60,86 @@ export default class TodosScreen extends React.Component {
     this.setState({
       todos: [
         {
-          _id: Math.max(...this.state.todos.map(o => o._id), 0) + 1,
-          name: "",
-          completed: undefined,
-          createdAt: undefined
+          ID: Math.max(...this.state.todos.map(o => o.ID), 0) + 1,
+          User: "paulpunke@gmail.com",
+          List: "nicelist",
+          State: "create",
+          Name: "",
+          Checked: false,
+          Version: 1
         }
       ].concat(this.state.todos)
     });
   }
 
   onPress(newitem) {
+    this.setState(
+      prevState => ({
+        todos: prevState.todos.map(item => {
+          if (item == newitem) {
+            return {
+              ...item,
+              Checked: !item.Checked,
+              State: item.State !== "" ? item.State : "update"
+            };
+          } else {
+            return item;
+          }
+        })
+      }),
+      () => this.sync()
+    );
+  }
+
+  sync() {
+    service.call(this.state.todos, items => this.onSync(items));
+  }
+
+  onSync(items) {
     this.setState(prevState => ({
-      todos: prevState.todos.map(item => {
-        if (item == newitem) {
-          return { ...item, checked: !item.checked };
-        } else {
-          return item;
-        }
-      })
+      todos: items
     }));
   }
 
   onSubmit(previtem, item) {
-    if (item.name === "") {
+    if (item.Name === "") {
       this.remove(previtem);
-    } else if (previtem.name !== item.name) {
+    } else if (previtem.Name !== item.Name) {
       this.update(previtem, item);
     }
   }
 
   remove(item) {
-    this.setState(prevState => ({
-      todos: prevState.todos.filter(el => el != item)
-    }));
+    this.setState(
+      prevState => ({
+        todos: this.state.todos.map(i => {
+          if (i == item) {
+            return { ...i, State: "delete" };
+          } else {
+            return i;
+          }
+        })
+      }),
+      () => this.sync()
+    );
   }
 
   update(previtem, item) {
-    this.setState(prevState => ({
-      todos: this.state.todos.map(i => {
-        if (i == previtem) {
-          return { ...i, name: item.name };
-        } else {
-          return i;
-        }
-      })
-    }));
+    this.setState(
+      prevState => ({
+        todos: this.state.todos.map(i => {
+          if (i == previtem) {
+            return {
+              ...i,
+              Name: item.Name,
+              State: item.State !== "" ? item.State : "update"
+            };
+          } else {
+            return i;
+          }
+        })
+      }),
+      () => this.sync()
+    );
   }
 }

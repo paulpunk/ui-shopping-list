@@ -23,10 +23,10 @@ export default class ShoppingListItem extends Component {
   }
 
   componentDidUpdate(prevProps) {
-    if (this.props.item.checked && !prevProps.item.checked) {
+    if (this.props.item.Checked && !prevProps.item.Checked) {
       this.animation.reset();
       this.animation.play(0, 48);
-    } else if (!this.props.item.checked && prevProps.item.checked) {
+    } else if (!this.props.item.Checked && prevProps.item.Checked) {
       this.animation.reset();
       this.animation.play(48, 24);
     }
@@ -38,9 +38,9 @@ export default class ShoppingListItem extends Component {
       this.props.onEndEditing(this.props.item, this.state.item);
     onSubmitEditing = () =>
       this.props.onSubmit(this.props.item, this.state.item);
-    onChangeText = name => {
+    onChangeText = Name => {
       var newitem = { ...this.state.item };
-      newitem.name = name;
+      newitem.Name = Name;
       this.setState({ item: newitem });
     };
 
@@ -54,7 +54,7 @@ export default class ShoppingListItem extends Component {
           }}
           title={this.input({
             onChangeText: onChangeText,
-            onSubmitEditing: onSubmitEditing,
+            // onSubmitEditing: onSubmitEditing,
             onEndEditing: onEndEditing
           })}
           bottomDivider={true}
@@ -81,8 +81,8 @@ export default class ShoppingListItem extends Component {
     return (
       <Input
         {...input}
-        autoFocus={this.state.item.name === ""}
-        value={this.state.item.name}
+        autoFocus={this.state.item.Name === ""}
+        value={this.state.item.Name}
         placeholder={"test"}
         containerStyle={{
           paddingHorizontal: null
