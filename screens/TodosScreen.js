@@ -29,9 +29,13 @@ export default class TodosScreen extends React.Component {
     service = new Service();
 
     this.state = {
-      todos: [],
-      user: "paulpunke@gmail.com"
+      user: "paulpunke@gmail.com",
+      todos: []
     };
+  }
+
+  componentDidMount() {
+    this.init();
   }
 
   render() {
@@ -39,7 +43,15 @@ export default class TodosScreen extends React.Component {
       <View style={{ flex: 1 }}>
         <ScrollView>
           <FlatList
-            data={this.state.todos.filter(el => el.State !== "delete")}
+            data={this.state.todos
+              .filter(el => el.State !== "delete")
+              .sort(function(a, b) {
+                if (a.Checked && !b.Checked) return 1;
+                if (!a.Checked && b.Checked) return -1;
+                if (a.ID < b.ID) return 1;
+                if (a.ID > b.ID) return -1;
+                return 0;
+              })}
             keyExtractor={item => item.ID.toString()}
             renderItem={({ item: item }) => (
               <Item
@@ -60,7 +72,7 @@ export default class TodosScreen extends React.Component {
     this.setState({
       todos: [
         {
-          ID: Math.max(...this.state.todos.map(o => o.ID), 0) + 1,
+          ID: Date.now(),
           User: "paulpunke@gmail.com",
           List: "nicelist",
           State: "create",
@@ -92,7 +104,11 @@ export default class TodosScreen extends React.Component {
   }
 
   sync() {
-    service.call(this.state.todos, items => this.onSync(items));
+    service.sync(this.state.todos, items => this.onSync(items));
+  }
+
+  init() {
+    service.sync(this.state.todos, items => this.onSync(items),true);
   }
 
   onSync(items) {
@@ -112,13 +128,15 @@ export default class TodosScreen extends React.Component {
   remove(item) {
     this.setState(
       prevState => ({
-        todos: this.state.todos.map(i => {
-          if (i == item) {
-            return { ...i, State: "delete" };
-          } else {
-            return i;
-          }
-        })
+        todos: this.state.todos
+          .filter(i => !(i == item && i.State === "create"))
+          .map(i => {
+            if (i == item) {
+              return { ...i, State: "delete" };
+            } else {
+              return i;
+            }
+          })
       }),
       () => this.sync()
     );

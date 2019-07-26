@@ -15,25 +15,29 @@ export default class ShoppingListItem extends Component {
   }
 
   componentDidMount() {
-    if (!this.props.item.checked) {
+    if (!this.props.item.Checked) {
       this.animation.play(24, 24);
     } else {
       this.animation.play(48, 48);
     }
   }
 
-  componentDidUpdate(prevProps) {
-    if (this.props.item.Checked && !prevProps.item.Checked) {
+  componentDidUpdate(prevProps, prevState) {
+    if (this.state.item.Checked && !prevState.item.Checked) {
       this.animation.reset();
       this.animation.play(0, 48);
-    } else if (!this.props.item.Checked && prevProps.item.Checked) {
+    } else if (!this.state.item.Checked && prevState.item.Checked) {
       this.animation.reset();
       this.animation.play(48, 24);
     }
   }
 
   render() {
-    onPress = () => this.props.onPress(this.props.item);
+    onPress = () => {
+      var newitem = { ...this.state.item };
+      newitem.Checked = !this.state.item.Checked;
+      this.setState({ item: newitem });
+    };
     onEndEditing = () =>
       this.props.onEndEditing(this.props.item, this.state.item);
     onSubmitEditing = () =>
@@ -72,6 +76,11 @@ export default class ShoppingListItem extends Component {
         loop={false}
         ref={animation => {
           this.animation = animation;
+        }}
+        onAnimationFinish={() => {
+          if (this.state.item.Checked != this.props.item.Checked) {
+            this.props.onPress(this.props.item);
+          }
         }}
       />
     );
