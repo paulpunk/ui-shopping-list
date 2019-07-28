@@ -47,7 +47,7 @@ class Listheader extends React.Component {
             onPress={() => this.props.navigation.openDrawer()}
           />
         </View>
-        <Text>{this.props.text}</Text>
+        <Text>{this.props.navigation.getParam("syncstate", "defaultValue")}</Text>
       </View>
     );
   };

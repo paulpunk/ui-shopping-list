@@ -1,7 +1,13 @@
 const URL = "https://nicelist.herokuapp.com/list";
 
 export default class Service {
+  constructor(navigation) {
+    this.navigation = navigation;
+  }
+
   sync(items, callback, init) {
+    this.navigation.setParams({ syncstate: "syncing" });
+
     items = items.filter(i => i.State !== "");
     if (!init && items.length == 0) {
       return;
@@ -23,7 +29,7 @@ export default class Service {
         body: JSON.stringify(nicelist)
       });
       const content = await rawResponse.json();
-
+      this.navigation.setParams({ syncstate: "" });
       callback(content.Items != null ? content.Items : []);
     })();
   }

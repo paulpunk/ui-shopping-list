@@ -13,11 +13,12 @@ const Stack = createStackNavigator(
     }
   },
   {
-    // defaultNavigationOptions: {
-    //   headerStyle: {
-    //     shadowOpacity: 1
-    //   }
-    // }
+    defaultNavigationOptions: {
+      headerStyle: {
+        // shadowOpacity: 1
+        backgroundColor: "#F9F9F9"
+      }
+    }
   }
 );
 

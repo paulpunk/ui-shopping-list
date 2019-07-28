@@ -26,7 +26,7 @@ export default class TodosScreen extends React.Component {
   constructor(props) {
     super(props);
 
-    service = new Service();
+    service = new Service(props.navigation);
 
     this.state = {
       user: "paulpunke@gmail.com",
@@ -108,7 +108,7 @@ export default class TodosScreen extends React.Component {
   }
 
   init() {
-    service.sync(this.state.todos, items => this.onSync(items),true);
+    service.sync(this.state.todos, items => this.onSync(items), true);
   }
 
   onSync(items) {
