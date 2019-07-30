@@ -3,25 +3,14 @@ import TodosScreen from "../screens/TodosScreen";
 import React from "react";
 import SideMenu from "../screens/SideMenu";
 import Colors from "../constants/Colors";
-
-
+import DrawerNavigation from "./DrawerNavigation";
 
 const Stack = createStackNavigator(
   {
-    Main: {
-      screen: TodosScreen
-    },
-    ShareScreen: {
-      screen: SideMenu
-    }
+    DrawerNavigation
   },
   {
-    defaultNavigationOptions: ({ navigation }) => ({
-      headerStyle: {
-        // shadowOpacity: 1
-        backgroundColor: Colors(navigation).header
-      }
-    })
+    headerMode: 'none',
   }
 );
 

@@ -15,6 +15,7 @@ import Title from "../components/Title";
 import MenuButton from "../components/MenuButton";
 import ShareButton from "../components/ShareButton";
 import Service from "../service/Service";
+import Colors from "../constants/Colors";
 
 export default class TodosScreen extends React.Component {
   static navigationOptions = {
@@ -40,7 +41,13 @@ export default class TodosScreen extends React.Component {
 
   render() {
     return (
-      <View style={{ flex: 1 }}>
+      <View
+        style={{
+          flex: 1,
+          backgroundColor: Colors(this.props.navigation).header
+        }}
+      >
+        <StatusBar barStyle={Colors(this.props.navigation).statusBar} />
         <ScrollView>
           <FlatList
             data={this.state.todos

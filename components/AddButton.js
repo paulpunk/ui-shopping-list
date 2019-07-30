@@ -1,24 +1,29 @@
 import React from "react";
 import PropTypes from "prop-types";
-import { Icon, Fab } from "native-base";
-import COLORS from "../constants/Colors";
+import { Fab } from "native-base";
+import { Icon } from "react-native-elements";
+import Colors from "../constants/Colors";
+import { withNavigation } from "react-navigation";
 
-const propTypes = {
-  onPress: PropTypes.func.isRequired
-};
+class AddButton extends React.Component {
+  render() {
+    onPress = () => this.props.onPress();
+    return (
+      <Fab
+        direction="up"
+        containerStyle={{}}
+        style={{ backgroundColor: Colors(this.props.navigation).secondary }}
+        position="bottomRight"
+        onPress={onPress}
+      >
+        <Icon
+          name="add"
+          size={30}
+          color={Colors(this.props.navigation).primary}
+        />
+      </Fab>
+    );
+  }
+}
 
-const AddTodoButton = ({ onPress }) => (
-  <Fab
-    direction="up"
-    containerStyle={{}}
-    style={{ backgroundColor: COLORS.primary }}
-    position="bottomRight"
-    onPress={onPress}
-  >
-    <Icon name="add" style={{ color: COLORS.secondary }} />
-  </Fab>
-);
-
-AddTodoButton.propTypes = propTypes;
-
-export default AddTodoButton;
+export default withNavigation(AddButton);

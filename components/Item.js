@@ -1,13 +1,15 @@
-import React, { Component } from "react";
+import React from "react";
 import { Text, View, StyleSheet, Platform } from "react-native";
 import { Constants } from "expo";
 import { Input, ListItem } from "react-native-elements";
 import LottieView from "lottie-react-native";
 import { Animated } from "react-native";
+import Colors from "../constants/Colors";
+import { withNavigation } from "react-navigation";
 
 const HEIGTH = 20;
 
-export default class ShoppingListItem extends Component {
+class Item extends React.Component {
   constructor(props) {
     super(props);
 
@@ -29,6 +31,8 @@ export default class ShoppingListItem extends Component {
     } else if (!this.state.item.Checked && prevState.item.Checked) {
       this.animation.reset();
       this.animation.play(48, 24);
+    } else {
+      this.componentDidMount();
     }
   }
 
@@ -54,7 +58,8 @@ export default class ShoppingListItem extends Component {
           onPress={onPress}
           leftElement={this.checkBox()}
           containerStyle={{
-            backgroundColor: "#fff"
+            backgroundColor: "transparent",
+            height: 50
           }}
           title={this.input({
             onChangeText: onChangeText,
@@ -71,7 +76,7 @@ export default class ShoppingListItem extends Component {
     return (
       <LottieView
         style={{ width: 30 }}
-        source={require("../animation/animation.json")}
+        source={ Colors(this.props.navigation).checkMark}
         // autoPlay
         loop={false}
         ref={animation => {
@@ -93,6 +98,7 @@ export default class ShoppingListItem extends Component {
         autoFocus={this.state.item.Name === ""}
         value={this.state.item.Name}
         placeholder={"test"}
+        spellCheck={false}
         containerStyle={{
           paddingHorizontal: null
         }}
@@ -100,6 +106,7 @@ export default class ShoppingListItem extends Component {
           borderBottomWidth: 0
         }}
         inputStyle={{
+          color: Colors(this.props.navigation).primary,
           minHeight: 20,
           ...Platform.select({
             ios: {
@@ -114,3 +121,5 @@ export default class ShoppingListItem extends Component {
     );
   }
 }
+
+export default withNavigation(Item);

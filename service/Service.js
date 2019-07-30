@@ -6,12 +6,11 @@ export default class Service {
   }
 
   sync(items, callback, init) {
-    this.navigation.setParams({ syncstate: "syncing" });
-
     items = items.filter(i => i.State !== "");
     if (!init && items.length == 0) {
       return;
     }
+    this.navigation.setParams({ syncstate: "syncing" });
 
     const nicelist = {
       User: "paulpunke@gmail.com",
