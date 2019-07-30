@@ -1,5 +1,5 @@
 import React from "react";
-import { Text, View, StyleSheet, Platform } from "react-native";
+import { Text, View, StyleSheet, Platform, TextInput } from "react-native";
 import { Constants } from "expo";
 import { Input, ListItem } from "react-native-elements";
 import LottieView from "lottie-react-native";
@@ -76,7 +76,7 @@ class Item extends React.Component {
     return (
       <LottieView
         style={{ width: 30 }}
-        source={ Colors(this.props.navigation).checkMark}
+        source={Colors(this.props.navigation).checkMark}
         // autoPlay
         loop={false}
         ref={animation => {
@@ -93,30 +93,23 @@ class Item extends React.Component {
 
   input(input) {
     return (
-      <Input
+      <TextInput
         {...input}
         autoFocus={this.state.item.Name === ""}
         value={this.state.item.Name}
         placeholder={"test"}
         spellCheck={false}
-        containerStyle={{
-          paddingHorizontal: null
-        }}
-        inputContainerStyle={{
-          borderBottomWidth: 0
-        }}
-        inputStyle={{
-          color: Colors(this.props.navigation).primary,
-          minHeight: 20,
-          ...Platform.select({
-            ios: {
-              fontSize: 17
-            },
-            default: {
-              fontSize: 16
-            }
-          })
-        }}
+        keyboardAppearance={Colors(this.props.navigation).keyboardAppearance}
+        color={Colors(this.props.navigation).primary}
+        minHeight={20}
+        {...Platform.select({
+          ios: {
+            fontSize: 17
+          },
+          default: {
+            fontSize: 16
+          }
+        })}
       />
     );
   }

@@ -21,7 +21,8 @@ export default function(navigation) {
         noticeBackground: tintColor,
         noticeText: "#fff",
         statusBar: "dark-content",
-        checkMark: require("../animation/checkmark-light.json")
+        checkMark: require("../animation/checkmark-light.json"),
+        keyboardAppearance : "light",
       }
     : {
         primary: "#fff",
@@ -38,6 +39,7 @@ export default function(navigation) {
         noticeBackground: tintColor,
         noticeText: "#fff",
         statusBar: "light-content",
-        checkMark: require("../animation/checkmark-dark.json")
+        checkMark: require("../animation/checkmark-dark.json"),
+        keyboardAppearance : "dark",
       };
 }
