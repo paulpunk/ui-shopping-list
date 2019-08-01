@@ -12,7 +12,7 @@ class AddButton extends React.Component {
       <Fab
         direction="up"
         containerStyle={{}}
-        style={{ backgroundColor: Colors(this.props.navigation).secondary }}
+        style={{ backgroundColor: Colors(this.props.navigation).header }}
         position="bottomRight"
         onPress={onPress}
       >

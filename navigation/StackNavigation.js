@@ -4,8 +4,6 @@ import React from "react";
 import SideMenu from "../screens/SideMenu";
 import Colors from "../constants/Colors";
 
-
-
 const Stack = createStackNavigator(
   {
     Main: {
@@ -18,8 +16,10 @@ const Stack = createStackNavigator(
   {
     defaultNavigationOptions: ({ navigation }) => ({
       headerStyle: {
-        // shadowOpacity: 1
-        backgroundColor: Colors(navigation).header
+        // elevation: 4,
+        shadowOffset: { width: 0, height: 1},
+        shadowOpacity: 0.2,
+        backgroundColor: Colors(navigation).header,
       }
     })
   }

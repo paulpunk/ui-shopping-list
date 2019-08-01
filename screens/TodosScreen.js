@@ -44,7 +44,7 @@ export default class TodosScreen extends React.Component {
       <View
         style={{
           flex: 1,
-          backgroundColor: Colors(this.props.navigation).header
+          backgroundColor: Colors(this.props.navigation).background
         }}
       >
         <StatusBar barStyle={Colors(this.props.navigation).statusBar} />

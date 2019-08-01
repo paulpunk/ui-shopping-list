@@ -2,7 +2,7 @@ const tintColor = "#2f95dc";
 
 const black = "#121212";
 
-const grey = "#F9F9F9";
+const grey = "#F4F4F4";
 
 export default function(navigation) {
   return !navigation.getParam("darkmode", false)
@@ -10,6 +10,7 @@ export default function(navigation) {
         primary: black,
         secondary: "#fff",
         header: grey,
+        background: "#fff",
         tintColor,
         tabIconDefault: "#ccc",
         tabIconSelected: tintColor,
@@ -21,13 +22,14 @@ export default function(navigation) {
         noticeBackground: tintColor,
         noticeText: "#fff",
         statusBar: "dark-content",
-        checkMark: require("../animation/checkmark-light.json"),
+        checkMark: require("../animation/check-light.json"),
         keyboardAppearance : "light",
       }
     : {
         primary: "#fff",
         secondary: black,
-        header: black,
+        header: "#1C1C1C",
+        background: "#1C1C1C",
         tintColor,
         tabIconDefault: "#ccc",
         tabIconSelected: tintColor,
@@ -39,7 +41,7 @@ export default function(navigation) {
         noticeBackground: tintColor,
         noticeText: "#fff",
         statusBar: "light-content",
-        checkMark: require("../animation/checkmark-dark.json"),
+        checkMark: require("../animation/check-dark.json"),
         keyboardAppearance : "dark",
       };
 }
