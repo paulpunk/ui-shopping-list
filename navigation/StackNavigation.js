@@ -17,8 +17,8 @@ const Stack = createStackNavigator(
     defaultNavigationOptions: ({ navigation }) => ({
       headerStyle: {
         // elevation: 4,
-        shadowOffset: { width: 0, height: 1},
-        shadowOpacity: 0.2,
+        // shadowOffset: { width: 0, height: 1},
+        // shadowOpacity: 0.2,
         backgroundColor: Colors(navigation).header,
       }
     })
