@@ -55,6 +55,7 @@ class Item extends React.Component {
     return (
       <View>
         <ListItem
+          underlayColor="transparent"
           onPress={onPress}
           leftElement={this.checkBox()}
           containerStyle={{

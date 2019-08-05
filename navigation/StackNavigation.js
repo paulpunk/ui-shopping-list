@@ -1,7 +1,7 @@
 import { createStackNavigator } from "react-navigation";
 import TodosScreen from "../screens/TodosScreen";
 import React from "react";
-import SideMenu from "../screens/SideMenu";
+import ShareScreen from "../screens/ShareScreen";
 import Colors from "../constants/Colors";
 
 const Stack = createStackNavigator(
@@ -10,7 +10,7 @@ const Stack = createStackNavigator(
       screen: TodosScreen
     },
     ShareScreen: {
-      screen: SideMenu
+      screen: ShareScreen
     }
   },
   {

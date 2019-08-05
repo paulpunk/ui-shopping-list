@@ -51,7 +51,13 @@ export default class TodosScreen extends React.Component {
         <ScrollView>
           <FlatList
             data={this.state.todos
-              .filter(el => el.State !== "delete")
+              .filter(
+                item =>
+                  item.List ===
+                  this.props.navigation.getParam("list", { name: "nicelist" })
+                    .name
+              )
+              .filter(item => item.State !== "delete")
               .sort(function(a, b) {
                 if (a.Checked && !b.Checked) return 1;
                 if (!a.Checked && b.Checked) return -1;

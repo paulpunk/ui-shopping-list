@@ -13,7 +13,14 @@ class ShareButton extends React.Component {
         containerStyle={{
           padding: 10
         }}
-        onPress={() => this.props.navigation.push("ShareScreen")}
+        onPress={() =>
+          this.props.navigation.navigate("ShareScreen", {
+            users:
+              this.props.navigation.getParam("list", null) !== null
+                ? this.props.navigation.getParam("list", null).users
+                : []
+          })
+        }
       />
     );
   };
