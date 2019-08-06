@@ -7,6 +7,7 @@ class ShareButton extends React.Component {
   render = () => {
     return (
       <Icon
+        underlayColor="transparent"
         name="share"
         color={Colors(this.props.navigation).primary}
         hitSlop={{ top: 50, bottom: 10, left: 30, right: 30 }}
@@ -14,12 +15,10 @@ class ShareButton extends React.Component {
           padding: 10
         }}
         onPress={() =>
-          this.props.navigation.navigate("ShareScreen", {
-            users:
-              this.props.navigation.getParam("list", null) !== null
-                ? this.props.navigation.getParam("list", null).users
-                : []
-          })
+          this.props.navigation.navigate(
+            "ShareScreen",
+            this.props.navigation.state.params
+          )
         }
       />
     );

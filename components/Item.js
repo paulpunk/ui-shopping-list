@@ -1,13 +1,10 @@
-import React from "react";
-import { Text, View, StyleSheet, Platform, TextInput } from "react-native";
-import { Constants } from "expo";
-import { Input, ListItem } from "react-native-elements";
 import LottieView from "lottie-react-native";
-import { Animated } from "react-native";
-import Colors from "../constants/Colors";
+import React from "react";
+import { Platform, TextInput, View } from "react-native";
+import { ListItem } from "react-native-elements";
 import { withNavigation } from "react-navigation";
-
-const HEIGTH = 20;
+import Input from "../components/Input";
+import Colors from "../constants/Colors";
 
 class Item extends React.Component {
   constructor(props) {
@@ -44,8 +41,6 @@ class Item extends React.Component {
     };
     onEndEditing = () =>
       this.props.onEndEditing(this.props.item, this.state.item);
-    onSubmitEditing = () =>
-      this.props.onSubmit(this.props.item, this.state.item);
     onChangeText = Name => {
       var newitem = { ...this.state.item };
       newitem.Name = Name;
@@ -62,11 +57,13 @@ class Item extends React.Component {
             backgroundColor: "transparent",
             height: 50
           }}
-          title={this.input({
-            onChangeText: onChangeText,
-            // onSubmitEditing: onSubmitEditing,
-            onEndEditing: onEndEditing
-          })}
+          title={
+            <Input
+              value={this.state.item.Name}
+              onChangeText={onChangeText}
+              onEndEditing={onEndEditing}
+            />
+          }
           bottomDivider={true}
         />
       </View>
@@ -88,30 +85,6 @@ class Item extends React.Component {
             this.props.onPress(this.props.item);
           }
         }}
-      />
-    );
-  }
-
-  input(input) {
-    return (
-      <TextInput
-        {...input}
-        autoFocus={this.state.item.Name === ""}
-        value={this.state.item.Name}
-        placeholder={"test"}
-        spellCheck={false}
-        keyboardAppearance={Colors(this.props.navigation).keyboardAppearance}
-        color={Colors(this.props.navigation).primary}
-        selectionColor={Colors(this.props.navigation).primary}
-        minHeight={20}
-        {...Platform.select({
-          ios: {
-            fontSize: 17
-          },
-          default: {
-            fontSize: 16
-          }
-        })}
       />
     );
   }

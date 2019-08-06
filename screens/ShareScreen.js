@@ -1,27 +1,54 @@
 import React from "react";
-import { View, Text, ScrollView, FlatList } from "react-native";
-import { Input, ListItem } from "react-native-elements";
+import { FlatList, ScrollView, View } from "react-native";
 import { withNavigation } from "react-navigation";
+import AddButton from "../components/AddButton";
 import SharedUser from "../components/SharedUser";
+import Colors from "../constants/Colors";
 
-class SideMenu extends React.Component {
+class ShareScreen extends React.Component {
   constructor(props) {
     super(props);
+
+    this.state = {
+      users: this.props.navigation
+        .getParam("lists", [])
+        .filter(
+          list =>
+            list.name === this.props.navigation.getParam("list", "nicelist")
+        )
+        .flatMap(list => list.sharedwith)
+    };
   }
 
   render() {
     return (
-      <View style={{ flex: 1 }}>
+      <View
+        style={{
+          flex: 1,
+          backgroundColor: Colors(this.props.navigation).background
+        }}
+      >
         <ScrollView>
           <FlatList
-            data={this.props.navigation.getParam("users", [])}
+            data={this.state.users}
             keyExtractor={user => user.id}
             renderItem={({ item }) => <SharedUser user={item} />}
           />
         </ScrollView>
+        <AddButton onPress={() => this.addUser()} />
       </View>
     );
   }
+
+  addUser() {
+    this.setState({
+      users: [
+        {
+          id: ""
+        }
+      ].concat(this.state.users)
+    });
+  }
 }
 
-export default withNavigation(SideMenu);
+export default withNavigation(ShareScreen);

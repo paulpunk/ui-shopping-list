@@ -1,21 +1,13 @@
 import React from "react";
-import {
-  ScrollView,
-  StyleSheet,
-  FlatList,
-  StatusBar,
-  Platform,
-  View
-} from "react-native";
-
-import COLORS from "../constants/Colors";
+import { FlatList, ScrollView, StatusBar, View } from "react-native";
 import AddButton from "../components/AddButton";
 import Item from "../components/Item";
-import Title from "../components/Title";
 import MenuButton from "../components/MenuButton";
 import ShareButton from "../components/ShareButton";
-import Service from "../service/Service";
+import Title from "../components/Title";
 import Colors from "../constants/Colors";
+import Service from "../service/Service";
+
 
 export default class TodosScreen extends React.Component {
   static navigationOptions = {
@@ -28,7 +20,6 @@ export default class TodosScreen extends React.Component {
     super(props);
 
     service = new Service(props.navigation);
-
     this.state = {
       user: "paulpunke@gmail.com",
       todos: []
@@ -54,8 +45,7 @@ export default class TodosScreen extends React.Component {
               .filter(
                 item =>
                   item.List ===
-                  this.props.navigation.getParam("list", { name: "nicelist" })
-                    .name
+                  this.props.navigation.getParam("list", "nicelist")
               )
               .filter(item => item.State !== "delete")
               .sort(function(a, b) {
@@ -69,7 +59,6 @@ export default class TodosScreen extends React.Component {
             renderItem={({ item: item }) => (
               <Item
                 item={item}
-                onSubmit={(previtem, item) => this.onSubmit(previtem, item)}
                 onEndEditing={(previtem, item) => this.onSubmit(previtem, item)}
                 onPress={item => this.onPress(item)}
               />

@@ -1,9 +1,8 @@
-import React from "react";
-import PropTypes from "prop-types";
 import { Fab } from "native-base";
+import React from "react";
 import { Icon } from "react-native-elements";
-import Colors from "../constants/Colors";
 import { withNavigation } from "react-navigation";
+import Colors from "../constants/Colors";
 
 class AddButton extends React.Component {
   render() {

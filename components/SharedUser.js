@@ -1,17 +1,14 @@
 import React from "react";
-import { Text, View, StyleSheet, Platform, TextInput } from "react-native";
-import { Constants } from "expo";
-import { Input, ListItem } from "react-native-elements";
-import LottieView from "lottie-react-native";
-import { Animated } from "react-native";
-import Colors from "../constants/Colors";
+import { View } from "react-native";
+import { ListItem } from "react-native-elements";
 import { withNavigation } from "react-navigation";
-
-const HEIGTH = 20;
+import Input from "../components/Input";
 
 class SharedUser extends React.Component {
   constructor(props) {
     super(props);
+
+    this.state = { user: props.user };
   }
 
   render() {
@@ -25,7 +22,13 @@ class SharedUser extends React.Component {
             backgroundColor: "transparent",
             height: 50
           }}
-          title={this.props.user.id}
+          title={
+            <Input
+              value={this.state.user.id}
+              // onChangeText={onChangeText}
+              // onEndEditing={onEndEditing}
+            />
+          }
           bottomDivider={true}
         />
       </View>

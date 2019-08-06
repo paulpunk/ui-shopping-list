@@ -18,7 +18,7 @@ class List extends React.Component {
     onPress = () => {
       this.props.navigation.setParams({ list: this.props.list });
       this.props.navigation.navigate("Main", {
-        list: this.props.list
+        list: this.props.list.name
       });
       this.props.navigation.closeDrawer();
     };

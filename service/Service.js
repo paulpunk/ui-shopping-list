@@ -15,7 +15,7 @@ export default class Service {
     this.navigation.setParams({ syncstate: "syncing" });
 
     const nicelist = {
-      User: "paulpunke@gmail.com",
+      User: this.navigation.getParam("user", "paulpunke@gmail.com"),
       Items: items
     };
 
@@ -30,22 +30,26 @@ export default class Service {
         body: JSON.stringify(nicelist)
       });
       const content = await rawResponse.json();
+
+      const lists = [
+        {
+          name: "nicelist",
+          sharedwith: [{ id: "katharinadeuerling@gmail.com" }]
+        },
+        { name: "test", sharedwith: [{ id: "paulpunke@gmail.com" }] }
+      ];
+
       this.navigation.setParams({
-        syncstate: ""
+        syncstate: "",
+        lists: lists,//content.Lists != null ? content.Lists : [],
+        user: content.User
       });
+
       callback(content.Items != null ? content.Items : []);
 
       // Set drawer data
       this.navigation.navigate("DrawerNavigation", {
-        lists: [
-          {
-            ID: Date.now(),
-            name: "nicelist",
-            owner: "paulpunke@gmail.com",
-            users: [{ id: "katharinadeuerling@gmail.com" }]
-          },
-          { ID: Date.now(), name: "test", owner: "paulpunke@gmail.com" }
-        ]
+        lists: lists
       });
     })();
   }
