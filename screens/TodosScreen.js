@@ -1,5 +1,12 @@
 import React from "react";
-import { FlatList, ScrollView, StatusBar, View } from "react-native";
+import {
+  FlatList,
+  ScrollView,
+  StatusBar,
+  View,
+  Keyboard,
+  NetInfo
+} from "react-native";
 import AddButton from "../components/AddButton";
 import Item from "../components/Item";
 import MenuButton from "../components/MenuButton";
@@ -7,7 +14,7 @@ import ShareButton from "../components/ShareButton";
 import Title from "../components/Title";
 import Colors from "../constants/Colors";
 import Service from "../service/Service";
-
+import { RefreshControl } from "react-native";
 
 export default class TodosScreen extends React.Component {
   static navigationOptions = {
@@ -22,13 +29,42 @@ export default class TodosScreen extends React.Component {
     service = new Service(props.navigation);
     this.state = {
       user: "paulpunke@gmail.com",
-      todos: []
+      todos: [],
+      refreshing: false,
+      connected: false
     };
   }
 
+  f;
+
   componentDidMount() {
-    this.init();
+    handleConnectivityChange = isConnected => {
+      if (isConnected) {
+        if (!this.state.connected) {
+          this.init();
+          this.state.connected = true;
+        }
+      } else {
+        if (this.state.connected) {
+          this.props.navigation.setParams({
+            syncstate: "offline"
+          });
+          this.state.connected = false;
+        }
+      }
+    };
+    NetInfo.isConnected.addEventListener(
+      "connectionChange",
+      handleConnectivityChange
+    );
   }
+
+  _onRefresh = () => {
+    // this.setState({ refreshing: true });
+    this.init();
+    Keyboard.dismiss();
+    // this.setState({ refreshing: false });
+  };
 
   render() {
     return (
@@ -39,7 +75,14 @@ export default class TodosScreen extends React.Component {
         }}
       >
         <StatusBar barStyle={Colors(this.props.navigation).statusBar} />
-        <ScrollView>
+        <ScrollView
+          refreshControl={
+            <RefreshControl
+              refreshing={this.state.refreshing}
+              onRefresh={this._onRefresh}
+            />
+          }
+        >
           <FlatList
             data={this.state.todos
               .filter(
@@ -76,7 +119,7 @@ export default class TodosScreen extends React.Component {
         {
           ID: Date.now(),
           User: "paulpunke@gmail.com",
-          List: "nicelist",
+          List: this.props.navigation.getParam("list", "nicelist"),
           State: "create",
           Name: "",
           Checked: false,

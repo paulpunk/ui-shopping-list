@@ -1,13 +1,8 @@
 import React from "react";
-import { Text, View, StyleSheet, Platform, TextInput } from "react-native";
-import { Constants } from "expo";
-import { Input, ListItem } from "react-native-elements";
-import LottieView from "lottie-react-native";
-import { Animated } from "react-native";
-import Colors from "../constants/Colors";
+import { View } from "react-native";
+import { ListItem } from "react-native-elements";
 import { withNavigation } from "react-navigation";
-
-const HEIGTH = 20;
+import Colors from "../constants/Colors";
 
 class List extends React.Component {
   constructor(props) {
@@ -18,7 +13,7 @@ class List extends React.Component {
     onPress = () => {
       this.props.navigation.setParams({ list: this.props.list });
       this.props.navigation.navigate("Main", {
-        list: this.props.list.name
+        list: this.props.list.Name
       });
       this.props.navigation.closeDrawer();
     };
@@ -31,7 +26,10 @@ class List extends React.Component {
             backgroundColor: "transparent",
             height: 50
           }}
-          title={this.props.list.name}
+          titleStyle={{
+            color: Colors(this.props.navigation).primary
+          }}
+          title={this.props.list.Name}
           bottomDivider={true}
         />
       </View>

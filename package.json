@@ -9,6 +9,7 @@
   },
   "dependencies": {
     "@expo/vector-icons": "^10.0.3",
+    "@react-native-community/netinfo": "^4.1.4",
     "deepmerge": "^3.3.0",
     "expo": "^33.0.0",
     "expo-font": "^5.0.1",

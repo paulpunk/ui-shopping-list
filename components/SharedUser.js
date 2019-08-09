@@ -13,6 +13,14 @@ class SharedUser extends React.Component {
 
   render() {
     onPress = () => {};
+    onEndEditing = () =>
+      this.props.onEndEditing(this.props.user, this.state.user);
+    onChangeText = Mail => {
+      var newuser = { ...this.state.user };
+      newuser.Mail = Mail;
+      this.setState({ user: newuser });
+    };
+
     return (
       <View>
         <ListItem
@@ -24,9 +32,9 @@ class SharedUser extends React.Component {
           }}
           title={
             <Input
-              value={this.state.user.id}
-              // onChangeText={onChangeText}
-              // onEndEditing={onEndEditing}
+              value={this.state.user.Mail}
+              onChangeText={onChangeText}
+              onEndEditing={onEndEditing}
             />
           }
           bottomDivider={true}

@@ -1,25 +1,45 @@
-import * as Font from "expo-font";
-import React from "react";
-import { StatusBar, View, Text } from "react-native";
-import { withNavigation } from "react-navigation";
 import LottieView from "lottie-react-native";
+import React from "react";
+import { Text, View } from "react-native";
+import { withNavigation } from "react-navigation";
 import Colors from "../constants/Colors";
 
 class Title extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      playing: false
+    };
+  }
+
   componentDidUpdate(prevProps, prevState) {
-    if (this.props.navigation.getParam("syncstate", "") === "syncing") {
-      this.played = false;
-      this.animation.reset();
-      this.animation.play();
-      this.onAnimationFinish = () => {
-        if(!this.played){
-          this.played = true;
-          this.animation.play(0, 31);
-        }
-        
-      };
+    if (this.props.navigation.getParam("syncstate", "") === "offline") {
+      this.state.playing = false;
+      return;
+    }
+    if (!this.state.playing) {
+      if (this.props.navigation.getParam("syncstate", "") === "syncing") {
+        this.state.playing = true;
+        this.animation.reset();
+        this.animation.play();
+      } else {
+        this.animation.play(31, 31);
+      }
     }
   }
+
+  onAnimationFinish = () => {
+    if (this.state.playing) {
+      if (this.props.navigation.getParam("syncstate", "") === "syncing") {
+        this.animation.reset();
+        this.animation.play();
+      } else {
+        this.animation.reset();
+        this.animation.play(0, 31);
+        this.state.playing = false;
+      }
+    }
+  };
 
   render = () => {
     return (
@@ -31,19 +51,37 @@ class Title extends React.Component {
           marginTop: 10
         }}
       >
-        <Text style={{ fontSize: 20, fontWeight: "bold", color: Colors(this.props.navigation).primary }}>
+        <Text
+          style={{
+            fontSize: 20,
+            fontWeight: "bold",
+            color: Colors(this.props.navigation).primary
+          }}
+        >
           nicelist
         </Text>
-        <LottieView
-          style={{ width: 80, marginTop: -15, marginBottom: -15 }}
-          source={require("../animation/loading.json")}
-          loop={this.props.navigation.getParam("syncstate", "") === "syncing"}
-          speed={1.5}
-          ref={animation => {
-            this.animation = animation;
-          }}
-          onAnimationFinish={this.onAnimationFinish}
-        />
+        {this.props.navigation.getParam("syncstate", "") === "offline" ? (
+          <Text
+            style={{
+              fontSize: 10,
+              color: Colors(this.props.navigation).subtitle,
+              marginTop: -2
+            }}
+          >
+            offline
+          </Text>
+        ) : (
+          <LottieView
+            style={{ width: 80, marginTop: -15, marginBottom: -15 }}
+            source={Colors(this.props.navigation).loading}
+            loop={false}
+            speed={1.5}
+            ref={animation => {
+              this.animation = animation;
+            }}
+            onAnimationFinish={this.onAnimationFinish}
+          />
+        )}
         {/* <Text style={{ fontSize: 10, color: "#A9A9A9" }}>
           {this.props.navigation.getParam("syncstate", "defaultValue")}
         </Text> */}

@@ -12,7 +12,6 @@ export default class Service {
     if (!init && items.length == 0) {
       return;
     }
-    this.navigation.setParams({ syncstate: "syncing" });
 
     const nicelist = {
       User: this.navigation.getParam("user", "paulpunke@gmail.com"),
@@ -22,35 +21,64 @@ export default class Service {
     console.log(nicelist);
 
     (async () => {
-      const rawResponse = await fetch(URL, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify(nicelist)
-      });
-      const content = await rawResponse.json();
+      try {
+        this.navigation.setParams({ syncstate: "syncing" });
+        // if (this.navigation.getParam("syncstate", "") !== "syncing") {
+        //   this.navigation.setParams({ syncstate: "syncing", request: 1 });
+        // } else {
+        //   this.navigation.setParams({
+        //     request: this.navigation.getParam("request", undefined) + 1
+        //   });
+        // }
 
-      const lists = [
-        {
-          name: "nicelist",
-          sharedwith: [{ id: "katharinadeuerling@gmail.com" }]
-        },
-        { name: "test", sharedwith: [{ id: "paulpunke@gmail.com" }] }
-      ];
+        const request = this.navigation.getParam("request", undefined);
 
-      this.navigation.setParams({
-        syncstate: "",
-        lists: lists,//content.Lists != null ? content.Lists : [],
-        user: content.User
-      });
+        const rawResponse = await fetch(URL, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify(nicelist)
+        });
 
-      callback(content.Items != null ? content.Items : []);
+        const content = await rawResponse.json();
 
-      // Set drawer data
-      this.navigation.navigate("DrawerNavigation", {
-        lists: lists
-      });
+        const lists = [
+          {
+            Name: "nicelist",
+            sharedwith: [{ Mail: "katharinadeuerling@gmail.com" }]
+          },
+          { Name: "test", sharedwith: [{ Mail: "paulpunke@gmail.com" }] }
+        ];
+        this.setResult(lists, content, callback);
+        // if (request === this.navigation.getParam("request", undefined)) {
+        //   this.setResult(lists, content, callback);
+        // }
+      } catch (error) {
+        this.navigation.setParams({ syncstate: "offline", request: 1 });
+      }
     })();
+  }
+
+  responseOk(response) {
+    alert(response.statusText);
+    return (
+      response.statusText == "OK" &&
+      response.status >= 200 &&
+      response.status < 300
+    );
+  }
+
+  setResult(lists, content, callback) {
+    this.navigation.setParams({
+      syncstate: "",
+      lists: lists,
+      user: content.User
+    });
+    callback(content.Items != null ? content.Items : []);
+    // Set drawer data
+    this.navigation.navigate("DrawerNavigation", {
+      lists: lists
+    });
   }
 }
