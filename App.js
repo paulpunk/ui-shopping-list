@@ -1,14 +1,12 @@
+import { Provider } from "mobx-react";
 import React from "react";
-import { Platform, StatusBar, StyleSheet, Text, View } from "react-native";
 import Root from "./navigation/Root";
+import store from "./store/NiceListStore";
 
 export default function App() {
-  return <Root />;
+  return (
+    <Provider store={store}>
+      <Root />
+    </Provider>
+  );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#fff"
-  }
-});

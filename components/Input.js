@@ -8,7 +8,7 @@ class Input extends React.Component {
     return (
       <TextInput
         {...this.props}
-        autoFocus={this.props.value === ""}
+        autoFocus={this.props.value == ""}
         value={this.props.value}
         placeholder={"test"}
         spellCheck={false}

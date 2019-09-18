@@ -3,18 +3,11 @@ import { getPlatformOrientationLockAsync } from "expo/build/ScreenOrientation/Sc
 const URL = "https://nicelist.herokuapp.com/list";
 
 export default class Service {
-  constructor(navigation) {
-    this.navigation = navigation;
-  }
-
-  sync(items, callback, init) {
-    items = items.filter(i => i.State !== "");
-    if (!init && items.length == 0) {
-      return;
-    }
+  sync(store) {
+    items = store.items.filter(i => i.State !== "");
 
     const nicelist = {
-      User: this.navigation.getParam("user", "paulpunke@gmail.com"),
+      User: "paulpunke@gmail.com",
       Items: items
     };
 
@@ -22,16 +15,7 @@ export default class Service {
 
     (async () => {
       try {
-        this.navigation.setParams({ syncstate: "syncing" });
-        // if (this.navigation.getParam("syncstate", "") !== "syncing") {
-        //   this.navigation.setParams({ syncstate: "syncing", request: 1 });
-        // } else {
-        //   this.navigation.setParams({
-        //     request: this.navigation.getParam("request", undefined) + 1
-        //   });
-        // }
-
-        const request = this.navigation.getParam("request", undefined);
+        store.syncstate = "syncing";
 
         const rawResponse = await fetch(URL, {
           method: "POST",
@@ -46,39 +30,20 @@ export default class Service {
         const lists = [
           {
             Name: "nicelist",
-            sharedwith: [{ Mail: "katharinadeuerling@gmail.com" }]
+            SharedWith: [{ Mail: "katharinadeuerling@gmail.com" }]
           },
-          { Name: "test", sharedwith: [{ Mail: "paulpunke@gmail.com" }] }
+          { Name: "test", SharedWith: [{ Mail: "paulpunke@gmail.com" }] }
         ];
-        this.setResult(lists, content, callback);
-        // if (request === this.navigation.getParam("request", undefined)) {
-        //   this.setResult(lists, content, callback);
-        // }
+        this.setResult(lists, content, store);
       } catch (error) {
-        this.navigation.setParams({ syncstate: "offline", request: 1 });
+        store.syncstate = "offline";
       }
     })();
   }
 
-  responseOk(response) {
-    alert(response.statusText);
-    return (
-      response.statusText == "OK" &&
-      response.status >= 200 &&
-      response.status < 300
-    );
-  }
-
-  setResult(lists, content, callback) {
-    this.navigation.setParams({
-      syncstate: "",
-      lists: lists,
-      user: content.User
-    });
-    callback(content.Items != null ? content.Items : []);
-    // Set drawer data
-    this.navigation.navigate("DrawerNavigation", {
-      lists: lists
-    });
+  setResult(lists, content, store) {
+    store.syncstate = "";
+    store.lists = lists;
+    store.items = content.Items;
   }
 }

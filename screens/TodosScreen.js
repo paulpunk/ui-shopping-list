@@ -1,11 +1,13 @@
+import { inject, observer } from "mobx-react";
 import React from "react";
 import {
   FlatList,
+  Keyboard,
+  NetInfo,
+  RefreshControl,
   ScrollView,
   StatusBar,
-  View,
-  Keyboard,
-  NetInfo
+  View
 } from "react-native";
 import AddButton from "../components/AddButton";
 import Item from "../components/Item";
@@ -13,9 +15,9 @@ import MenuButton from "../components/MenuButton";
 import ShareButton from "../components/ShareButton";
 import Title from "../components/Title";
 import Colors from "../constants/Colors";
-import Service from "../service/Service";
-import { RefreshControl } from "react-native";
 
+@inject("store")
+@observer
 export default class TodosScreen extends React.Component {
   static navigationOptions = {
     headerTitle: <Title />,
@@ -26,7 +28,6 @@ export default class TodosScreen extends React.Component {
   constructor(props) {
     super(props);
 
-    service = new Service(props.navigation);
     this.state = {
       user: "paulpunke@gmail.com",
       todos: [],
@@ -34,8 +35,6 @@ export default class TodosScreen extends React.Component {
       connected: false
     };
   }
-
-  f;
 
   componentDidMount() {
     handleConnectivityChange = isConnected => {
@@ -60,10 +59,8 @@ export default class TodosScreen extends React.Component {
   }
 
   _onRefresh = () => {
-    // this.setState({ refreshing: true });
     this.init();
     Keyboard.dismiss();
-    // this.setState({ refreshing: false });
   };
 
   render() {
@@ -84,26 +81,12 @@ export default class TodosScreen extends React.Component {
           }
         >
           <FlatList
-            data={this.state.todos
-              .filter(
-                item =>
-                  item.List ===
-                  this.props.navigation.getParam("list", "nicelist")
-              )
-              .filter(item => item.State !== "delete")
-              .sort(function(a, b) {
-                if (a.Checked && !b.Checked) return 1;
-                if (!a.Checked && b.Checked) return -1;
-                if (a.ID < b.ID) return 1;
-                if (a.ID > b.ID) return -1;
-                return 0;
-              })}
+            data={this.props.store.displayedItems}
             keyExtractor={item => item.ID.toString()}
             renderItem={({ item: item }) => (
               <Item
                 item={item}
-                onEndEditing={(previtem, item) => this.onSubmit(previtem, item)}
-                onPress={item => this.onPress(item)}
+                onSubmit={(item, previtem) => this.onSubmit(item, previtem)}
               />
             )}
           />
@@ -114,38 +97,7 @@ export default class TodosScreen extends React.Component {
   }
 
   addItem() {
-    this.setState({
-      todos: [
-        {
-          ID: Date.now(),
-          User: "paulpunke@gmail.com",
-          List: this.props.navigation.getParam("list", "nicelist"),
-          State: "create",
-          Name: "",
-          Checked: false,
-          Version: 1
-        }
-      ].concat(this.state.todos)
-    });
-  }
-
-  onPress(newitem) {
-    this.setState(
-      prevState => ({
-        todos: prevState.todos.map(item => {
-          if (item == newitem) {
-            return {
-              ...item,
-              Checked: !item.Checked,
-              State: item.State !== "" ? item.State : "update"
-            };
-          } else {
-            return item;
-          }
-        })
-      }),
-      () => this.sync()
-    );
+    this.props.store.createItem();
   }
 
   sync() {
@@ -153,56 +105,58 @@ export default class TodosScreen extends React.Component {
   }
 
   init() {
-    service.sync(this.state.todos, items => this.onSync(items), true);
+    this.props.store.init();
   }
 
-  onSync(items) {
-    this.setState(prevState => ({
-      todos: items
-    }));
+  onSubmit(item, previtem) {
+    this.props.store.submit(item, previtem);
   }
 
-  onSubmit(previtem, item) {
-    if (item.Name === "") {
-      this.remove(previtem);
-    } else if (previtem.Name !== item.Name) {
-      this.update(previtem, item);
-    }
+  mergeItems(items) {
+    const changedItems = this.changedItems(items);
+    const itemsFromServer = this.itemsFromServer(items, changedItems);
+
+    return changedItems.concat(itemsFromServer);
   }
 
-  remove(item) {
-    this.setState(
-      prevState => ({
-        todos: this.state.todos
-          .filter(i => !(i == item && i.State === "create"))
-          .map(i => {
-            if (i == item) {
-              return { ...i, State: "delete" };
-            } else {
-              return i;
-            }
-          })
-      }),
-      () => this.sync()
+  itemsFromServer(items, changedItems) {
+    return items.filter(i => !this.itemWasChanged(i, changedItems));
+  }
+
+  itemWasChanged(item, changedItems) {
+    return (
+      changedItems.filter(i => i.ID === item.ID && i.User === item.User)
+        .length > 0
     );
   }
 
-  update(previtem, item) {
-    this.setState(
-      prevState => ({
-        todos: this.state.todos.map(i => {
-          if (i == previtem) {
-            return {
-              ...i,
-              Name: item.Name,
-              State: item.State !== "" ? item.State : "update"
-            };
-          } else {
-            return i;
-          }
-        })
-      }),
-      () => this.sync()
+  changedItems(items) {
+    const toBeCreated = this.state.todos
+      .filter(i => i.State === "create")
+      .filter(i => !this.itemOnServer(i, items));
+    const toBeUpdated = this.state.todos
+      .filter(i => i.State === "update")
+      .filter(i => !this.itemOnServerWithHigherVersion(i, items));
+
+    const toBeDelete = this.state.todos
+      .filter(i => i.State === "delete")
+      .filter(i => this.itemOnServer(i, items))
+      .filter(i => !this.itemOnServerWithHigherVersion(i, items));
+
+    return toBeCreated.concat(toBeUpdated).concat(toBeDelete);
+  }
+
+  itemOnServerWithHigherVersion(item, items) {
+    return (
+      items
+        .filter(i => i.ID === item.ID && i.User === item.User)
+        .filter(i => i.Version > item.Version).length > 0
+    );
+  }
+
+  itemOnServer(item, items) {
+    return (
+      items.filter(i => i.ID === item.ID && i.User === item.User).length > 0
     );
   }
 }

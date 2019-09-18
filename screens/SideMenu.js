@@ -4,7 +4,10 @@ import { ListItem } from "react-native-elements";
 import { withNavigation } from "react-navigation";
 import List from "../components/List";
 import Colors from "../constants/Colors";
+import { inject, observer } from "mobx-react";
 
+@inject("store")
+@observer
 class SideMenu extends React.Component {
   render() {
     return (
@@ -15,9 +18,9 @@ class SideMenu extends React.Component {
         }}
       >
         <FlatList
-          data={this.props.navigation.getParam("lists", [])}
-          keyExtractor={list => list.Name}
-          renderItem={({ item }) => <List list={item} />}
+          data={this.props.store.lists}
+          keyExtractor={item => item.Name}
+          renderItem={({ item: item }) => <List list={item} />}
         />
         <ListItem
           title="darkmode"
@@ -30,12 +33,9 @@ class SideMenu extends React.Component {
             color: Colors(this.props.navigation).primary
           }}
           switch={{
-            value: this.props.navigation.getParam("darkmode", false),
+            value: this.props.store.darkmode,
             onValueChange: value => {
-              this.props.navigation.setParams({ darkmode: value });
-              this.props.navigation.navigate("Main", {
-                darkmode: value
-              });
+              this.props.store.darkmode = value;
             }
           }}
         />
