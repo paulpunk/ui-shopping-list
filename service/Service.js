@@ -8,7 +8,7 @@ export default class Service {
     items = storeJS.items.slice().filter(i => i.State !== "");
 
     const nicelist = {
-      User: "paulpunke@gmail.com",
+      User: storeJS.user,
       Items: items
     };
 

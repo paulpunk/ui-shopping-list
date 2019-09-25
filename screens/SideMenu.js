@@ -5,6 +5,8 @@ import { withNavigation } from "react-navigation";
 import List from "../components/List";
 import Colors from "../constants/Colors";
 import { inject, observer } from "mobx-react";
+import User from "../components/User";
+import { getStatusBarHeight } from "react-native-status-bar-height";
 
 @inject("store")
 @observer
@@ -17,6 +19,12 @@ class SideMenu extends React.Component {
           backgroundColor: Colors(this.props.store.darkmode).background
         }}
       >
+        <View
+          style={{
+            height: getStatusBarHeight()
+          }}
+        />
+        <User />
         <FlatList
           data={this.props.store.displayedLists}
           keyExtractor={item => item.Name}
