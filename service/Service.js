@@ -1,10 +1,11 @@
-import { getPlatformOrientationLockAsync } from "expo/build/ScreenOrientation/ScreenOrientation";
+import { toJS } from "mobx";
 
 const URL = "https://nicelist.herokuapp.com/list";
 
 export default class Service {
   sync(store) {
-    items = store.items.filter(i => i.State !== "");
+    var storeJS = toJS(store);
+    items = storeJS.items.slice().filter(i => i.State !== "");
 
     const nicelist = {
       User: "paulpunke@gmail.com",
@@ -43,7 +44,7 @@ export default class Service {
 
   setResult(lists, content, store) {
     store.syncstate = "";
-    store.lists = lists;
-    store.items = content.Items;
+    store.lists.replace(lists);
+    store.items.replace(content.Items);
   }
 }

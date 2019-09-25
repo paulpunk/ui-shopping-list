@@ -13,7 +13,7 @@ class Input extends React.Component {
         placeholder={"test"}
         spellCheck={false}
         keyboardAppearance={Colors(this.props.navigation).keyboardAppearance}
-        color={Colors(this.props.navigation).primary}
+        style={{ color: Colors(this.props.navigation).primary }}
         selectionColor={Colors(this.props.navigation).primary}
         minHeight={20}
         {...Platform.select({

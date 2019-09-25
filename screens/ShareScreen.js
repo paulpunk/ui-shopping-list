@@ -9,7 +9,11 @@ import ShareButton from "../components/ShareButton";
 import Title from "../components/Title";
 import AddUserButton from "../components/AddUserButton";
 import ShareTitle from "../components/ShareTitle";
+import { inject, observer } from "mobx-react";
 
+
+@inject("store")
+@observer
 class ShareScreen extends React.Component {
   static navigationOptions = {
     headerTitle: <ShareTitle />,
@@ -18,15 +22,6 @@ class ShareScreen extends React.Component {
   };
   constructor(props) {
     super(props);
-    this.state = {
-      users: this.props.navigation
-        .getParam("lists", [])
-        .filter(
-          list =>
-            list.Name === this.props.navigation.getParam("list", "nicelist")
-        )
-        .flatMap(list => list.sharedwith)
-    };
   }
 
   componentDidMount() {
@@ -43,7 +38,7 @@ class ShareScreen extends React.Component {
       >
         <ScrollView>
           <FlatList
-            data={this.state.users}
+            data={this.props.store.displayedUsers}
             keyExtractor={user => user.Mail}
             renderItem={({ item }) => (
               <SharedUser

@@ -11,10 +11,7 @@ class Checkbox extends React.Component {
   }
 
   shouldComponentUpdate(prevProps) {
-    return (
-      (this.props.Checked && !prevProps.Checked) ||
-      (!this.props.Checked && prevProps.Checked)
-    );
+    return this.props.Checked !== prevProps.Checked;
   }
 
   componentDidMount() {
@@ -31,10 +28,13 @@ class Checkbox extends React.Component {
     }
     if (this.props.Checked && !prevProps.Checked) {
       this.animation.play(0, 48);
+      this.state.playing = true;
     } else if (!this.props.Checked && prevProps.Checked) {
       this.animation.play(48, 24);
+      this.state.playing = true;
+    } else {
+      this.componentDidMount();
     }
-    this.state.playing = true;
   }
 
   render() {

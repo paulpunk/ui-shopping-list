@@ -14,7 +14,7 @@ class List extends React.Component {
 
   render() {
     onPress = () => {
-      this.props.store.list = this.props.list;
+      this.props.store.list = this.props.list.Name;
       this.props.navigation.navigate("Main", {
         list: this.props.list.Name
       });

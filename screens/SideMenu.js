@@ -18,7 +18,7 @@ class SideMenu extends React.Component {
         }}
       >
         <FlatList
-          data={this.props.store.lists}
+          data={this.props.store.displayedLists}
           keyExtractor={item => item.Name}
           renderItem={({ item: item }) => <List list={item} />}
         />

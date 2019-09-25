@@ -52,14 +52,14 @@ export class NiceListStore {
   @observable app = "nicelist";
   @observable items = [];
   @observable lists = [];
-  @observable list = { Name: "nicelist" };
+  @observable list = "nicelist";
   @observable user = "paulpunke@gmail.com";
   @observable syncstate = "";
   @observable darkmode = false;
 
   @computed get displayedItems() {
     return this.items
-      .filter(item => item.List === this.list.Name)
+      .filter(item => item.List === this.list)
       .filter(item => item.State !== "delete")
       .sort(function(a, b) {
         if (a.Checked && !b.Checked) return 1;
@@ -68,6 +68,18 @@ export class NiceListStore {
         if (a.ID > b.ID) return -1;
         return 0;
       });
+  }
+
+  @computed get displayedLists() {
+    return this.lists.slice();
+  }
+
+  @computed get displayedUsers() {
+    return this.lists
+      .filter(
+        list => list.Name === this.list
+      )
+      .flatMap(list => list.SharedWith);
   }
 
   @computed get isToBeSynced() {
@@ -80,7 +92,7 @@ export class NiceListStore {
 
   @action
   init() {
-    service.sync(this);
+    this.sync();
   }
 
   @action
