@@ -11,7 +11,7 @@ class Checkbox extends React.Component {
   }
 
   shouldComponentUpdate(prevProps) {
-    return this.props.Checked !== prevProps.Checked;
+    return this.props.Checked !== prevProps.Checked || this.props.darkmode !== prevProps.darkmode;
   }
 
   componentDidMount() {
@@ -48,7 +48,7 @@ class Checkbox extends React.Component {
       <View>
         <LottieView
           style={{ width: 30 }}
-          source={Colors(this.props.navigation).checkMark}
+          source={Colors(this.props.darkmode).checkMark}
           loop={false}
           ref={animation => {
             this.animation = animation;

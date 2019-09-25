@@ -14,7 +14,7 @@ class SideMenu extends React.Component {
       <View
         style={{
           flex: 1,
-          backgroundColor: Colors(this.props.navigation).background
+          backgroundColor: Colors(this.props.store.darkmode).background
         }}
       >
         <FlatList
@@ -30,15 +30,18 @@ class SideMenu extends React.Component {
             height: 50
           }}
           titleStyle={{
-            color: Colors(this.props.navigation).primary
+            color: Colors(this.props.store.darkmode).primary
           }}
           switch={{
             value: this.props.store.darkmode,
             onValueChange: value => {
-              // this.props.navigation.setParams({
-              //   darkmode: value
-              // });
               this.props.store.darkmode = value;
+              this.props.navigation.setParams({
+                darkmode: value
+              });
+              this.props.navigation.navigate("Main", {
+                darkmode: value
+              });
             }
           }}
         />

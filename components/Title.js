@@ -3,8 +3,8 @@ import React from "react";
 import { Text, View } from "react-native";
 import { withNavigation } from "react-navigation";
 import Colors from "../constants/Colors";
-import { inject, observer } from "mobx-react";
 import SyncStatus from "./SyncStatus";
+import { inject, observer } from "mobx-react";
 
 @inject("store")
 @observer
@@ -23,7 +23,7 @@ class Title extends React.Component {
           style={{
             fontSize: 20,
             fontWeight: "bold",
-            color: Colors(this.props.navigation).primary
+            color: Colors(this.props.navigation.getParam("darkmode", false)).primary
           }}
         >
           {this.props.store.app}

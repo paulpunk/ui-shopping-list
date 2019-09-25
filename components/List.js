@@ -30,7 +30,7 @@ class List extends React.Component {
             height: 50
           }}
           titleStyle={{
-            color: Colors(this.props.navigation).primary
+            color: Colors(this.props.store.darkmode).primary
           }}
           title={this.props.list.Name}
           bottomDivider={true}

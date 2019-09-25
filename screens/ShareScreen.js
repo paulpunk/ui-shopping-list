@@ -32,7 +32,7 @@ class ShareScreen extends React.Component {
       <View
         style={{
           flex: 1,
-          backgroundColor: Colors(this.props.navigation).background
+          backgroundColor: Colors(this.props.store.darkmode).background
         }}
       >
         <ScrollView>

@@ -12,9 +12,9 @@ class Input extends React.Component {
         value={this.props.value}
         placeholder={"test"}
         spellCheck={false}
-        keyboardAppearance={Colors(this.props.navigation).keyboardAppearance}
-        style={{ color: Colors(this.props.navigation).primary }}
-        selectionColor={Colors(this.props.navigation).primary}
+        keyboardAppearance={Colors(this.props.darkmode).keyboardAppearance}
+        style={{ color: Colors(this.props.darkmode).primary }}
+        selectionColor={Colors(this.props.darkmode).primary}
         minHeight={20}
         {...Platform.select({
           ios: {

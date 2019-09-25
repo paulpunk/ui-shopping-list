@@ -4,7 +4,10 @@ import { StatusBar, View, Text } from "react-native";
 import { withNavigation } from "react-navigation";
 import LottieView from "lottie-react-native";
 import Colors from "../constants/Colors";
+import { inject, observer } from "mobx-react";
 
+@inject("store")
+@observer
 class ShareTitle extends React.Component {
   render = () => {
     return (
@@ -20,7 +23,7 @@ class ShareTitle extends React.Component {
           style={{
             fontSize: 20,
             fontWeight: "bold",
-            color: Colors(this.props.navigation).primary
+            color: Colors(this.props.navigation.getParam("darkmode", false)).primary
           }}
         >
           share

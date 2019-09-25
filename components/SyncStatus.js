@@ -3,7 +3,10 @@ import React from "react";
 import { Text, View } from "react-native";
 import { withNavigation } from "react-navigation";
 import Colors from "../constants/Colors";
+import { inject, observer } from "mobx-react";
 
+@inject("store")
+@observer
 class SyncStatus extends React.Component {
   constructor(props) {
     super(props);
@@ -48,7 +51,7 @@ class SyncStatus extends React.Component {
           <Text
             style={{
               fontSize: 10,
-              color: Colors(this.props.navigation).subtitle,
+              color: Colors(this.props.navigation.getParam("darkmode", false)).subtitle,
               marginTop: -2
             }}
           >
@@ -57,7 +60,7 @@ class SyncStatus extends React.Component {
         ) : (
           <LottieView
             style={{ width: 80, marginTop: -15, marginBottom: -15 }}
-            source={Colors(this.props.navigation).loading}
+            source={Colors(this.props.navigation.getParam("darkmode", false)).loading}
             loop={false}
             speed={1.5}
             ref={animation => {

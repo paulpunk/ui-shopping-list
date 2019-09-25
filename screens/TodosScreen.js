@@ -65,10 +65,10 @@ export default class TodosScreen extends React.Component {
       <View
         style={{
           flex: 1,
-          backgroundColor: Colors(this.props.navigation).background
+          backgroundColor: Colors(this.props.store.darkmode).background
         }}
       >
-        <StatusBar barStyle={Colors(this.props.navigation).statusBar} />
+        <StatusBar barStyle={Colors(this.props.store.darkmode).statusBar} />
         <ScrollView
           refreshControl={
             <RefreshControl

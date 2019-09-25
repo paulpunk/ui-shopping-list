@@ -3,7 +3,10 @@ import { View } from "react-native";
 import { ListItem } from "react-native-elements";
 import { withNavigation } from "react-navigation";
 import Input from "../components/Input";
+import { inject, observer } from "mobx-react";
 
+@inject("store")
+@observer
 class SharedUser extends React.Component {
   constructor(props) {
     super(props);
@@ -35,6 +38,7 @@ class SharedUser extends React.Component {
               value={this.state.user.Mail}
               onChangeText={onChangeText}
               onEndEditing={onEndEditing}
+              darkmode={this.props.store.darkmode}
             />
           }
           bottomDivider={true}

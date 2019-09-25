@@ -1,10 +1,12 @@
+import { inject, observer } from "mobx-react";
 import React from "react";
 import { View } from "react-native";
 import { ListItem } from "react-native-elements";
-import { withNavigation } from "react-navigation";
 import Checkbox from "./Checkbox";
 import Input from "./Input";
 
+@inject("store")
+@observer
 class Item extends React.Component {
   constructor(props) {
     super(props);
@@ -31,7 +33,11 @@ class Item extends React.Component {
           underlayColor="transparent"
           onPress={onPress}
           leftElement={
-            <Checkbox Checked={this.state.item.Checked} onSubmit={onSubmit} />
+            <Checkbox
+              Checked={this.state.item.Checked}
+              darkmode={this.props.store.darkmode}
+              onSubmit={onSubmit}
+            />
           }
           containerStyle={{
             backgroundColor: "transparent",
@@ -41,6 +47,7 @@ class Item extends React.Component {
             <Input
               value={this.state.item.Name}
               onChangeText={onChangeText}
+              darkmode={this.props.store.darkmode}
               onBlur={onSubmit}
             />
           }
@@ -51,4 +58,4 @@ class Item extends React.Component {
   }
 }
 
-export default withNavigation(Item);
+export default Item;

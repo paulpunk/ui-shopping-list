@@ -1,8 +1,7 @@
+import { inject, observer } from "mobx-react";
 import React from "react";
 import { Icon } from "react-native-elements";
-import { withNavigation } from "react-navigation";
 import Colors from "../constants/Colors";
-import { inject, observer } from "mobx-react";
 
 @inject("store")
 @observer
@@ -13,7 +12,7 @@ class AddUserButton extends React.Component {
       <Icon
         underlayColor="transparent"
         name="add"
-        color={Colors(this.props.navigation).primary}
+        color={Colors(this.props.store.darkmode).primary}
         hitSlop={{ top: 50, bottom: 10, left: 30, right: 30 }}
         containerStyle={{
           padding: 10
@@ -24,4 +23,4 @@ class AddUserButton extends React.Component {
   }
 }
 
-export default withNavigation(AddUserButton);
+export default AddUserButton;
