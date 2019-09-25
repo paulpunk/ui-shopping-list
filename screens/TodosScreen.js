@@ -45,9 +45,6 @@ export default class TodosScreen extends React.Component {
         }
       } else {
         if (this.state.connected) {
-          this.props.navigation.setParams({
-            syncstate: "offline"
-          });
           this.state.connected = false;
         }
       }
@@ -109,7 +106,7 @@ export default class TodosScreen extends React.Component {
   }
 
   onSubmit(item, previtem) {
-    this.props.store.submit(item, previtem);
+    this.props.store.submitItem(item, previtem);
   }
 
   mergeItems(items) {

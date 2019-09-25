@@ -42,9 +42,11 @@ class List {
 
 class SharedUser {
   @observable Mail;
+  @observable State;
 
-  constructor(Mail) {
-    this.Mail = Mail;
+  constructor() {
+    this.Mail = "";
+    this.State = "create";
   }
 }
 
@@ -76,9 +78,7 @@ export class NiceListStore {
 
   @computed get displayedUsers() {
     return this.lists
-      .filter(
-        list => list.Name === this.list
-      )
+      .filter(list => list.Name === this.list)
       .flatMap(list => list.SharedWith);
   }
 
@@ -106,12 +106,91 @@ export class NiceListStore {
   }
 
   @action
-  submit(item, previtem) {
+  submitItem(item, previtem) {
     if (this.itemShouldBeRemoved(item)) {
       this.items.remove(previtem);
     } else if (this.itemShouldBeUpdated(item, previtem)) {
       this.updateItem(previtem, item);
     }
+  }
+
+  @action
+  createUser() {
+    this.lists.replace(
+      this.lists.slice().map(l => {
+        if (l.Name === this.list) {
+          l.SharedWith.push(new SharedUser());
+          return l;
+        } else {
+          return l;
+        }
+      })
+    );
+  }
+
+  @action
+  submitUser(user, prevuser) {
+    if (this.userShouldBeRemoved(user)) {
+      this.removeUser(prevuser);
+    } else if (this.userShouldBeUpdated(user, prevuser)) {
+      this.updateItem(prevuser, user);
+    }
+  }
+
+  removeUser(user) {
+    this.lists.replace(
+      this.lists.slice().map(l => {
+        if (l.Name === this.list) {
+          if (user.State === "create") {
+            l.SharedWith.remove(user);
+          } else {
+            l.SharedWith = l.SharedWith.map(u => {
+              if (u == user) {
+                return {
+                  ...user,
+                  State: "delete"
+                };
+              } else {
+                return u;
+              }
+            });
+          }
+          return l;
+        } else {
+          return l;
+        }
+      })
+    );
+  }
+
+  updateUser(prevuser, user) {
+    this.lists.replace(
+      this.lists.slice().map(l => {
+        if (l.Name === this.list) {
+          l.SharedWith = l.SharedWith.map(u => {
+            if (u == prevuser) {
+              return {
+                ...user,
+                State: u.State !== "" ? u.State : "update"
+              };
+            } else {
+              return u;
+            }
+          });
+          return l;
+        } else {
+          return l;
+        }
+      })
+    );
+  }
+
+  userShouldBeRemoved(user) {
+    return user.Mail === "";
+  }
+
+  userShouldBeUpdated(user, prevuser) {
+    return user.Mail !== prevuser.Mail;
   }
 
   removeItem(item) {

@@ -11,7 +11,6 @@ import AddUserButton from "../components/AddUserButton";
 import ShareTitle from "../components/ShareTitle";
 import { inject, observer } from "mobx-react";
 
-
 @inject("store")
 @observer
 class ShareScreen extends React.Component {
@@ -64,11 +63,7 @@ class ShareScreen extends React.Component {
   }
 
   onSubmit(prevuser, user) {
-    if (user.Mail === "") {
-      this.remove(prevuser);
-    } else if (prevuser.Mail !== user.Mail) {
-      this.update(prevuser, user);
-    }
+    this.props.store.submitUser(user, prevuser);
   }
 
   remove(user) {

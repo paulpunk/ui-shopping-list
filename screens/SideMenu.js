@@ -35,6 +35,9 @@ class SideMenu extends React.Component {
           switch={{
             value: this.props.store.darkmode,
             onValueChange: value => {
+              // this.props.navigation.setParams({
+              //   darkmode: value
+              // });
               this.props.store.darkmode = value;
             }
           }}

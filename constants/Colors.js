@@ -4,8 +4,8 @@ const black = "#121212";
 
 const grey = "#F4F4F4";
 
-export default function(navigation) {
-  return !navigation.getParam("darkmode", false)
+export default function(darkmode) {
+  return !darkmode
     ? {
         primary: black,
         subtitle:"#9AA6AF",
